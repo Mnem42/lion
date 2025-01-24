@@ -2,7 +2,7 @@ use std::env;
 mod writer;
 
 struct Input {
-    file_name: String,
+    filename: String,
 }
 
 fn main() {
@@ -14,14 +14,14 @@ fn main() {
     //let _ext_dep = env::args().nth(2).expect("no path given");
 
     let args = Input {
-        file_name: file_name,
+        filename: file_name,
     };
 
-    if args.file_name.to_lowercase() == "help" {
+    if args.filename.to_lowercase() == "help" {
         println!("Help command called.\n{help}");
         return;
     }
-    let extension = args.file_name.split('.').last().unwrap_or("");
-    writer::write(extension, &args.file_name);
+    let extension = args.filename.split('.').last().unwrap_or("");
+    writer::write(extension, &args.filename);
     println!("Created .{extension} file");
 }
