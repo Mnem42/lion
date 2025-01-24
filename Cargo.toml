@@ -1,6 +1,7 @@
 [package]
 name = "Lion"
 version = "0.1.0"
+edition = "2021"
 authors = ["Umang Surana <no1umang@gmail.com>"]
 license = "MIT"
 description = "A developer tool to create files of different coding languages"
