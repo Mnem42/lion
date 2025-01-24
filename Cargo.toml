@@ -1,7 +1,13 @@
 [package]
 name = "Lion"
 version = "0.1.0"
-edition = "2021"
+authors = ["Umang Surana <no1umang@gmail.com>"]
+license = "MIT"
+description = "A developer tool to create files of different "
+readme = "README.md"
+homepage = "https://github.com/TeenCoder159/lion"
+repository = "https://github.com/TeenCoder159/lion"
+keywords = ["cli", "file", "developer tools"]
+categories = ["command-line-utilities"]
 
 [dependencies]
-clap = { version = "4.5.27", features = ["derive"] }
