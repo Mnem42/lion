@@ -8,8 +8,10 @@ struct Input {
 fn main() {
     let help =
         "Command list:\n lion <fileName.extension> -> Creates a file with filler code of the extension type\n";
-    let file_name = env::args().nth(1).expect("no pattern given");
-    // let _ = env::args().nth(2).expect("no path given");
+    let file_name = env::args()
+        .nth(1)
+        .expect("No file name given.\nPlease provide a file name and try again");
+    //let _ext_dep = env::args().nth(2).expect("no path given");
 
     let args = Input {
         file_name: file_name,

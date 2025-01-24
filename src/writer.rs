@@ -22,6 +22,7 @@ pub fn write(file_ext: &str, file_name: &String) {
         "go" => file_creator(
             file_name,
             "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}"),
+        "java" => file_creator(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}"),
         _ => panic!("Unsupported file format or an error occured!"),
     }
 }
