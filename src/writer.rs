@@ -4,9 +4,25 @@ fn file_creator(file_name: &String, file_content: &str) {
     fs::write(file_name, file_content).expect("An Unexpeceted error occured, please try again!");
 }
 
-pub fn write(file_ext: &str, file_name: &String) {
+pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
+    if let Some(_) = dependency {
+        match file_ext {
+            "rs" => {
+                let file_contents = fs::read_to_string("Cargo.toml".to_string())
+                    .expect("No Cargo.toml found, please create one to add a dependency");
+                let vector: Vec<&str> = file_contents.split("[dependencies]").collect();
+                let dependency_string = dependency.unwrap_or(String::from(""));
+                let final_content = format!(
+                    "{}[dependencies]\n{} = \"*\"{}\n",
+                    vector[0], dependency_string, vector[1]
+                );
+                file_creator(&String::from("Cargo.toml"), final_content.as_str());
+            }
+            _ => {}
+        }
+    }
     match file_ext {
-        "py" => file_creator(file_name, r#"print("Hello Lion!")"#),
+        "py" => file_creator(file_name, "print(\"Hello Lion!\")"),
 
         "rs" => file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}"),
         "cpp" => file_creator(

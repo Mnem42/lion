@@ -11,7 +11,7 @@ fn main() {
     let file_name = env::args()
         .nth(1)
         .expect("No file name given.\nPlease provide a file name and try again");
-    //let _ext_dep = env::args().nth(2).expect("no path given");
+    let ext_dep = env::args().nth(2);
 
     let args = Input {
         filename: file_name,
@@ -22,6 +22,6 @@ fn main() {
         return;
     }
     let extension = args.filename.split('.').last().unwrap_or("");
-    writer::write(extension, &args.filename);
+    writer::write(extension, &args.filename, ext_dep);
     println!("Created .{extension} file");
 }
