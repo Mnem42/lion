@@ -17,3 +17,4 @@ It helps by creating the file with some preset code and add external dependencie
   - C
   - C++
   - Go
+  - Java
