@@ -1,7 +1,8 @@
 use crate::util;
 use std::fs;
 
-pub fn dependency(file_ext: &str, file_name: &String, dep: String) {
+pub fn dependency(file_ext: &str, file_name: &String, dep: Option<String>) {
+    let dep = dep.unwrap();
     match file_ext {
         "py" => util::file_creator(
             file_name,
