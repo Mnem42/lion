@@ -1,5 +1,5 @@
 [package]
-name = "Lion"
+name = "Lion-cli"
 version = "0.1.0"
 edition = "2021"
 authors = ["Umang Surana <no1umang@gmail.com>"]
