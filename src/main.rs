@@ -3,6 +3,7 @@ mod writer;
 
 struct Input {
     filename: String,
+    dependency: Option<String>,
 }
 
 fn main() {
@@ -15,6 +16,7 @@ fn main() {
 
     let args = Input {
         filename: file_name,
+        dependency: ext_dep,
     };
 
     if args.filename.to_lowercase() == "help" {
@@ -22,6 +24,6 @@ fn main() {
         return;
     }
     let extension = args.filename.split('.').last().unwrap_or("");
-    writer::write(extension, &args.filename, ext_dep);
+    writer::write(extension, &args.filename, args.dependency);
     println!("Created .{extension} file");
 }
