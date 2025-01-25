@@ -8,10 +8,10 @@ on how to use it:
 
 - [x] Creates the file
 - [x] Adds preset code
-- [x] Allow dependency feature to be called individually
+- [x] Add external dependencies - Added for rust and python
 
 
-- [ ] Add external dependencies - Added for rust and python
+- [ ] Allow dependency feature to be called individually
 - [ ] Additional features coming soon
 
 ## Current list of supported languages:
