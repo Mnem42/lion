@@ -1,5 +1,6 @@
 use std::env;
 mod dependency;
+mod runner;
 mod util;
 mod writer;
 
@@ -22,15 +23,15 @@ fn main() {
         argument1: file_name,
         argument2: ext_dep,
     };
+    let extension = args.argument1.split('.').last().unwrap_or("");
 
     if args.argument1.to_lowercase() == "help" {
         println!("Help command called.\n{help}");
         return;
     } else if args.argument1.contains(".") {
-        let extension = args.argument1.split('.').last().unwrap_or("");
         writer::write(extension, &args.argument1, args.argument2);
         println!("Created .{extension} file");
     } else if args.argument1 == "dep" {
-        todo!()
+        dependency::dependency(extension, &args.argument1, args.argument2);
     }
 }
