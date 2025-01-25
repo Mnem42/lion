@@ -7,7 +7,7 @@ It helps by creating the file with some preset code and add external dependencie
 [x] Adds preset code
 
 
-[ ] Add external dependencies
+[ ] Add external dependencies - Added for rust
 
 [ ] Additional features
 
