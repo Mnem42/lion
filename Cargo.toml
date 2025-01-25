@@ -8,7 +8,7 @@ description = "A developer tool to create files of different coding languages"
 readme = "README.md"
 homepage = "https://github.com/TeenCoder159/lion"
 repository = "https://github.com/TeenCoder159/lion"
-keywords = ["cli", "file", "developer tools"]
+keywords = ["cli", "file"]
 categories = ["command-line-utilities"]
 
 [dependencies]
