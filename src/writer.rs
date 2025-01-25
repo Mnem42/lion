@@ -13,12 +13,14 @@ pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
             ),
             "rs" => {
                 let file_contents = fs::read_to_string("Cargo.toml")
-                    .expect("No Cargo.toml found, please create one to add a dependency");
-                let vector: Vec<&str> = file_contents.split("[dependencies]").collect();
+                    .expect("No Cargo.toml found; please create one to add a dependency");
+                let Some((before, after)) = file_contents.split_once("[dependencies]") else {
+                    panic!("No [dependencies] field in your Cargo.toml");
+                };
 
                 let final_content = format!(
                     "{}[dependencies]\n{} = \"*\"{}\n",
-                    vector[0], dependency_string, vector[1]
+                    before, dependency_string, after
                 );
                 file_creator(&String::from("Cargo.toml"), final_content.as_str());
                 file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}");
