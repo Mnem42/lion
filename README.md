@@ -6,14 +6,12 @@ See the
 [Docs](DOCS.md)
 on how to use it:
 
-[x] Creates the file
+- [x] Creates the file
+- [x] Adds preset code
 
-[x] Adds preset code
 
-
-[ ] Add external dependencies - Added for rust
-
-[ ] Additional features
+- [ ] Add external dependencies - Added for rust
+- [ ] Additional features
 
 ## Current list of supported languages:
   - Rust
