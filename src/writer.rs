@@ -2,8 +2,8 @@ use crate::dependency;
 use crate::util;
 
 pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
-    if let Some(dependency_string) = dependency {
-        dependency::dependency(file_ext, file_name, dependency_string);
+    if dependency.is_some() {
+        dependency::dependency(file_ext, file_name, dependency);
     } else {
         match file_ext {
             "py" => util::file_creator(file_name, "print(\"Hello Lion!\")"),
