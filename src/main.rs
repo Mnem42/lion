@@ -28,11 +28,17 @@ fn main() {
         println!("Help command called.\n{help}");
     } else if args.argument1.contains(".") {
         let extension = args.argument1.split('.').last().unwrap_or("");
+
         writer::write(extension, &args.argument1, args.argument2);
+
         println!("Created .{extension} file");
     } else if args.argument1 == "dep" {
-        let extension = args.argument1.split('.').last().unwrap_or("");
-        dependency::dependency(extension, &args.argument1, args.argument2);
+        // Only add external dependency
+        // let extension = args.argument1.split('.').last().unwrap_or("");
+
+        //dependency::dependency(extension, &args.argument1, args.argument2);
+
+        todo!()
     } else if args.argument1 == "run" {
         let extension = args.argument1.split('.').last().unwrap_or("");
         runner::run(extension, &args.argument1);
