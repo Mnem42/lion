@@ -5,15 +5,14 @@ fn file_creator(file_name: &String, file_content: &str) {
 }
 
 pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
-    if let Some(_) = dependency {
-        let dependency_string = dependency.unwrap();
+    if let Some(dependency_string) = dependency {
         match file_ext {
             "py" => file_creator(
                 file_name,
                 format!("import {dependency_string}\n\nprint(\"Hello Lion!\")").as_str(),
             ),
             "rs" => {
-                let file_contents = fs::read_to_string("Cargo.toml".to_string())
+                let file_contents = fs::read_to_string("Cargo.toml")
                     .expect("No Cargo.toml found, please create one to add a dependency");
                 let vector: Vec<&str> = file_contents.split("[dependencies]").collect();
 
