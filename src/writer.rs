@@ -1,53 +1,28 @@
-use std::fs;
-
-fn file_creator(file_name: &String, file_content: &str) {
-    fs::write(file_name, file_content).expect("An Unexpected error occured; please try again!");
-}
+use crate::dependency;
+use crate::util;
 
 pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
     if let Some(dependency_string) = dependency {
-        match file_ext {
-            "py" => file_creator(
-                file_name,
-                format!("import {dependency_string}\n\nprint(\"Hello Lion!\")").as_str(),
-            ),
-            "rs" => {
-                let file_contents = fs::read_to_string("Cargo.toml")
-                    .expect("No Cargo.toml found; please create one to add a dependency");
-                let Some((before, after)) = file_contents.split_once("[dependencies]") else {
-                    panic!("No [dependencies] field in your Cargo.toml");
-                };
-
-                let final_content = format!(
-                    "{}[dependencies]\n{} = \"*\"{}\n",
-                    before, dependency_string, after
-                );
-                file_creator(&String::from("Cargo.toml"), final_content.as_str());
-                file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}");
-            }
-            _ => {
-                eprintln!("Format not supported for external dependencies");
-            }
-        }
+        dependency::dependency(file_ext, file_name, dependency_string);
     } else {
         match file_ext {
-            "py" => file_creator(file_name, "print(\"Hello Lion!\")"),
+            "py" => util::file_creator(file_name, "print(\"Hello Lion!\")"),
 
-            "rs" => file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}"),
-            "cpp" => file_creator(
+            "rs" => util::file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}"),
+            "cpp" => util::file_creator(
                 file_name,
                 "#include <iostream>\n\nint main() {\n    std::cout << \"Hello, Lion!\" << std::endl;\n    return 0;\n}",
             ),
-            "c" => file_creator(file_name, "#include <stdio.h>
+            "c" => util::file_creator(file_name, "#include <stdio.h>
 
             int main() {
                 printf(\"Hello Lion!\");
                 return 0;
             }"),
-            "go" => file_creator(
+            "go" => util::file_creator(
                 file_name,
                 "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}"),
-            "java" => file_creator(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}"),
+            "java" => util::file_creator(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}"),
             _ => panic!("Unsupported file format or an error occured!"),
         }
     }
