@@ -27,7 +27,6 @@ fn main() {
 
     if args.argument1.to_lowercase() == "help" {
         println!("Help command called.\n{help}");
-        return;
     } else if args.argument1.contains(".") {
         writer::write(extension, &args.argument1, args.argument2);
         println!("Created .{extension} file");
