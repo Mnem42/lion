@@ -1,7 +1,7 @@
 use std::fs;
 
 fn file_creator(file_name: &String, file_content: &str) {
-    fs::write(file_name, file_content).expect("An Unexpeceted error occured, please try again!");
+    fs::write(file_name, file_content).expect("An Unexpected error occured; please try again!");
 }
 
 pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
