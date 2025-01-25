@@ -23,14 +23,18 @@ fn main() {
         argument1: file_name,
         argument2: ext_dep,
     };
-    let extension = args.argument1.split('.').last().unwrap_or("");
 
     if args.argument1.to_lowercase() == "help" {
         println!("Help command called.\n{help}");
     } else if args.argument1.contains(".") {
+        let extension = args.argument1.split('.').last().unwrap_or("");
         writer::write(extension, &args.argument1, args.argument2);
         println!("Created .{extension} file");
     } else if args.argument1 == "dep" {
+        let extension = args.argument1.split('.').last().unwrap_or("");
         dependency::dependency(extension, &args.argument1, args.argument2);
+    } else if args.argument1 == "run" {
+        let extension = args.argument1.split('.').last().unwrap_or("");
+        runner::run(extension, &args.argument1);
     }
 }
