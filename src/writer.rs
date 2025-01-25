@@ -24,7 +24,9 @@ pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
                 file_creator(&String::from("Cargo.toml"), final_content.as_str());
                 file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}");
             }
-            _ => {}
+            _ => {
+                eprintln!("Format not supported for external dependencies");
+            }
         }
     } else {
         match file_ext {
