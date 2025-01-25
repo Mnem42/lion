@@ -11,7 +11,7 @@ fn main() {
         "Command list:\n lion <fileName.extension> -> Creates a file with filler code of the extension type\n";
     let file_name = env::args()
         .nth(1)
-        .expect("No file name given.\nPlease provide a file name and try again");
+        .expect("No file name given.\nPlease provide a file name and try again\nRun lion help for the list of commands\n");
     let ext_dep = env::args().nth(2);
 
     let args = Input {
