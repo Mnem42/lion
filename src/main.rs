@@ -40,7 +40,8 @@ fn main() {
 
         todo!()
     } else if args.argument1 == "run" {
-        let extension = args.argument1.split('.').last().unwrap_or("");
-        runner::run(extension, &args.argument1);
+        let run_target = args.argument2.unwrap();
+        let extension = run_target.split('.').last().unwrap_or("");
+        runner::run(extension, &run_target);
     }
 }
