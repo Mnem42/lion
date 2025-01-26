@@ -3,39 +3,40 @@ use std::process::Command;
 pub fn run(file_ext: &str, file_name: &String) {
     match file_ext {
         "cpp" => {
-            let output = {
-                Command::new("g++")
-                    .arg(file_name)
-                    .arg("-o")
-                    .arg(file_name)
-                    .output()
-                    .expect("An error occured; Please try again.");
-                Command::new(format!("./{file_name}"))
-                    .output()
-                    .expect("An error occured; Please try again.")
-            };
-            println!("Running");
-            output.stdout;
+            Command::new("g++")
+                .arg(file_name)
+                .arg("-o")
+                .arg("lion_compiled")
+                .status()
+                .expect("An error occured; Please try again.");
+            println!("Compiled...");
+            Command::new(format!("./lion_compiled"))
+                .status()
+                .expect("An error occured; Please try again.");
+            println!("Ran the code successfully");
         }
         "rs" => {
-            let output = if cfg!(target_os = "windows") {
+            if cfg!(target_os = "windows") {
                 Command::new("rustc")
                     .arg(file_name)
-                    .output()
+                    .status()
                     .expect("An error occured; Please try again.");
+                println!("Compiled...");
                 Command::new(format!(".\\{file_name}.exe"))
-                    .output()
-                    .expect("An error occured; Please try again.")
+                    .status()
+                    .expect("An error occured; Please try again.");
+                println!("Ran the code successfully");
             } else {
                 Command::new("rustc")
                     .arg(file_name)
-                    .output()
+                    .status()
                     .expect("An error occured; Please try again.");
+                println!("Compiled...");
                 Command::new(format!("./{file_name}"))
-                    .output()
-                    .expect("An error occured; Please try again.")
+                    .status()
+                    .expect("An error occured; Please try again.");
+                println!("Ran the code successfully");
             };
-            output.stdout;
         }
         _ => {
             todo!()
