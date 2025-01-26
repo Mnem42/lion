@@ -12,8 +12,10 @@ struct Input {
 fn main() {
     let help =
         "Command list:\n
-        lion <fileName.extension> -> Creates a file with filler code of the extension type\n
-        lion <fileName.extension> <dependency> -> Adds an external dependency and creates a file with the provided file name\n";
+        lion-cli <fileName.extension> -> Creates a file with filler code of the extension type\n
+        lion-cli <fileName.extension> <dependency> -> Adds an external dependency and creates a file with the provided file name\n
+        lion-cli dep <dependency> -> adds the respective dependency to the file
+        lion-cli run <fileName.extension> -> runs the file specified (see the docs on supported languages)\n";
     let file_name = env::args()
         .nth(1)
         .expect("No file name given.\nPlease provide a file name and try again\nRun lion help for the list of commands\n");
