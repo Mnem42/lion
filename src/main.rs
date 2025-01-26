@@ -46,5 +46,7 @@ fn main() {
         let run_target = args.argument2.unwrap();
         let extension = run_target.split('.').last().unwrap_or("");
         runner::run(extension, &run_target);
+    } else {
+        println!("Unknown command;\nRun with help to see command list");
     }
 }
