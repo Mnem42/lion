@@ -4,10 +4,15 @@ use std::fs;
 pub fn dependency(file_ext: &str, file_name: &String, dep: Option<String>) {
     let dep = dep.unwrap();
     match file_ext {
-        "py" => util::file_creator(
-            file_name,
-            format!("import {dep}\n\nprint(\"Hello Lion!\")").as_str(),
-        ),
+        "py" => {
+            let contents = match fs::read_to_string(file_name) {
+                Ok(value) => value,
+                Err(_) => {
+                    format!("\nprint(\"Hello Lion!\")")
+                }
+            };
+            util::file_creator(file_name, format!("import {dep}\n{contents}").as_str())
+        }
         "rs" => {
             let file_contents = match fs::read_to_string("Cargo.toml") {
                 Ok(value) => value,
