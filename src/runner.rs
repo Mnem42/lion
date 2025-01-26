@@ -8,10 +8,10 @@ pub fn run(file_ext: &str, file_name: &String) {
                     .arg(file_name)
                     .arg("-o")
                     .arg(file_name)
-                    .spawn()
+                    .output()
                     .expect("An error occured; Please try again.");
                 Command::new(format!("./{file_name}"))
-                    .spawn()
+                    .output()
                     .expect("An error occured; Please try again.")
             };
             println!("Running");
