@@ -19,20 +19,22 @@ pub fn run(file_ext: &str, file_name: &String) {
             if cfg!(target_os = "windows") {
                 Command::new("rustc")
                     .arg(file_name)
+                    .args(["-o", "lion_compiled"])
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("Compiled...");
-                Command::new(format!(".\\{file_name}.exe"))
+                Command::new(format!(".\\lion_compiled.exe"))
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("Ran the code successfully");
             } else {
                 Command::new("rustc")
                     .arg(file_name)
+                    .args(["-o", "lion_compiled"])
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("Compiled...");
-                Command::new(format!("./{file_name}"))
+                Command::new(format!("./lion_compiled"))
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("Ran the code successfully");
