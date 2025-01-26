@@ -17,14 +17,12 @@ fn main() {
         lion-cli <fileName.extension> <dependency> -> Adds an external dependency and creates a file with the provided file name\n
         lion-cli dep <dependency> <fileName.extension> -> adds the respective dependency to the file\n
         lion-cli run <fileName.extension> -> runs the file specified (see the docs on supported languages)\n";
-    let file_name = env::args()
-        .nth(1)
-        .expect("No file name given.\nPlease provide a file name and try again\nRun lion help for the list of commands\n");
+    let file_name = env::args().nth(1);
     let ext_dep = env::args().nth(2);
     let file = env::args().nth(3);
 
     let args = Input {
-        argument1: file_name,
+        argument1: file_name.unwrap_or(format!("")),
         argument2: ext_dep,
         argument3: file.unwrap_or(String::from("")),
     };
