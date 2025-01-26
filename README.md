@@ -1,6 +1,6 @@
 # Lion is an open-source CLI tool that makes developers lives easier
 ## Lion is a project under development
-It helps by creating the file with some preset code and add external dependencies for you (only implemented for rust)
+It helps by creating the file with some preset code and add external dependencies for you (implemented for rust and python)
 
 See the
 [Docs](DOCS.md)

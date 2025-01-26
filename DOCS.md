@@ -33,8 +33,9 @@ Prerequisites: Cargo and Rust
 
 ```bash
 
-  lion-cli dep serde
-  # Adds serde as a dependency (only supported for rust and python so far)
+  lion-cli dep serde main.rs
+  lion-cli dep serde main.py
+  # Adds serde as a dependency (only supported for rust and python)
 
   lion-cli main.rs serde
   lion-cli main.py serde
