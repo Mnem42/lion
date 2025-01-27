@@ -1,8 +1,7 @@
 use crate::util;
 use std::fs;
 
-pub fn dependency(file_ext: &str, file_name: &String, dep: Option<String>) {
-    let dep = dep.unwrap();
+pub fn dependency(file_ext: &str, file_name: &String, dep: String) {
     match file_ext {
         "py" => {
             let contents = match fs::read_to_string(file_name) {
@@ -33,6 +32,7 @@ pub fn dependency(file_ext: &str, file_name: &String, dep: Option<String>) {
                 _ => String::from("#include <iostream>\n\nint main() {\n    std::cout << \"Hello, Lion!\" << std::endl;\n    return 0;\n}")
             };
             let final_content = format!("#include \"{dep}/{dep}.h\"\n{contents}");
+            println!("testing");
             util::file_creator(file_name, final_content.as_str());
         }
 

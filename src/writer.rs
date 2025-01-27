@@ -1,8 +1,8 @@
 use crate::dependency;
 use crate::util;
 
-pub fn write(file_ext: &str, file_name: &String, dependency: Option<String>) {
-    if dependency.is_some() {
+pub fn write(file_ext: &str, file_name: &String, dependency: String) {
+    if dependency != "" {
         dependency::dependency(file_ext, file_name, dependency);
     } else {
         match file_ext {
