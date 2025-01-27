@@ -9,9 +9,10 @@ on how to use it:
 - [x] Creates the file
 - [x] Adds preset code
 - [x] Add external dependencies - Added for rust and python
+- [x] Allow dependency feature to be called individually
+- [x] Add a compiling + running feature (added for rust and c++)
 
 
-- [ ] Allow dependency feature to be called individually
 - [ ] Additional features coming soon
 
 ## Current list of supported languages:
