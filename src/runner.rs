@@ -9,11 +9,11 @@ pub fn run(file_ext: &str, file_name: &String) {
                 .arg("lion_compiled")
                 .status()
                 .expect("An error occured; Please try again.");
-            println!("Compiled...");
+            println!("\nCompiled...\n");
             Command::new(format!("./lion_compiled"))
                 .status()
                 .expect("An error occured; Please try again.");
-            println!("Ran the code successfully");
+            println!("\nRan the code successfully");
         }
         "rs" => {
             if cfg!(target_os = "windows") {
@@ -22,23 +22,30 @@ pub fn run(file_ext: &str, file_name: &String) {
                     .args(["-o", "lion_compiled"])
                     .status()
                     .expect("An error occured; Please try again.");
-                println!("Compiled...");
+                println!("\nCompiled...\n");
                 Command::new(format!(".\\lion_compiled.exe"))
                     .status()
                     .expect("An error occured; Please try again.");
-                println!("Ran the code successfully");
+                println!("\nRan the code successfully");
             } else {
                 Command::new("rustc")
                     .arg(file_name)
                     .args(["-o", "lion_compiled"])
                     .status()
                     .expect("An error occured; Please try again.");
-                println!("Compiled...");
+                println!("\nCompiled...\n");
                 Command::new(format!("./lion_compiled"))
                     .status()
                     .expect("An error occured; Please try again.");
-                println!("Ran the code successfully");
+                println!("\nRan the code successfully");
             };
+        }
+        "py" => {
+            Command::new("python3")
+                .arg(file_name)
+                .status()
+                .expect("An error occured, please try again");
+            println!("\nRan the code successfully");
         }
         _ => {
             panic!("Running hasn't been supported yet for the specified file type");
