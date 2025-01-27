@@ -41,7 +41,7 @@ pub fn run(file_ext: &str, file_name: &String) {
             };
         }
         _ => {
-            todo!()
+            panic!("Running hasn't been supported yet for the specified file type");
         }
     }
 }

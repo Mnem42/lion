@@ -27,6 +27,7 @@ pub fn dependency(file_ext: &str, file_name: &String, dep: Option<String>) {
 
             let final_content = format!("{}[dependencies]\n{} = \"*\"{}\n", before, dep, after);
             util::file_creator(&String::from("Cargo.toml"), final_content.as_str());
+            util::file_creator(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}");
         }
         _ => {
             eprintln!("Format not supported for external dependencies");
