@@ -22,7 +22,7 @@ fn main() {
     let file = env::args().nth(3);
 
     let args = Input {
-        argument1: file_name.unwrap_or(format!("")),
+        argument1: file_name.unwrap_or(String::new()),
         argument2: ext_dep,
         argument3: file.unwrap_or(String::from("")),
     };

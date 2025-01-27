@@ -8,7 +8,7 @@ pub fn dependency(file_ext: &str, file_name: &String, dep: Option<String>) {
             let contents = match fs::read_to_string(file_name) {
                 Ok(value) => value,
                 Err(_) => {
-                    format!("\nprint(\"Hello Lion!\")")
+                    "\nprint(\"Hello Lion!\")".to_string()
                 }
             };
             util::file_creator(file_name, format!("import {dep}\n{contents}").as_str())

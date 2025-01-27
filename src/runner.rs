@@ -10,7 +10,7 @@ pub fn run(file_ext: &str, file_name: &String) {
                 .status()
                 .expect("An error occured; Please try again.");
             println!("\nCompiled...\n");
-            Command::new(format!("./lion_compiled"))
+            Command::new("./lion_compiled".to_string())
                 .status()
                 .expect("An error occured; Please try again.");
             println!("\nRan the code successfully");
@@ -23,7 +23,7 @@ pub fn run(file_ext: &str, file_name: &String) {
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
-                Command::new(format!(".\\lion_compiled.exe"))
+                Command::new(".\\lion_compiled.exe".to_string())
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nRan the code successfully");
@@ -34,7 +34,7 @@ pub fn run(file_ext: &str, file_name: &String) {
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
-                Command::new(format!("./lion_compiled"))
+                Command::new("./lion_compiled".to_string())
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nRan the code successfully");
