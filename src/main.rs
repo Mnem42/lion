@@ -32,18 +32,18 @@ fn main() {
         //
         println!("Help command called.\n{help}");
         //
-    } else if args.command.contains(".") {
+    } else if args.command.to_lowercase() == "new" {
         //
-        let extension = args.command.split('.').last().unwrap_or("");
-        writer::write(extension, &args.add_ons, args.file);
+        let extension = args.file.split('.').last().unwrap_or("");
+        writer::write(extension, &args.add_ons, args.file.clone());
         println!("Created .{extension} file");
         //
-    } else if args.command == "dep" {
+    } else if args.command.to_lowercase() == "dep" {
         // Only add external dependency
         let extension = args.add_ons.split('.').last().unwrap_or("");
         dependency::dependency(extension, &args.command, args.file);
         //
-    } else if args.command == "run" {
+    } else if args.command.to_lowercase() == "run" {
         //
         let run_target = args.file;
         let extension = run_target.split('.').last().unwrap_or("");
