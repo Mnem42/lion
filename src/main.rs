@@ -11,6 +11,8 @@ struct Input {
 }
 
 fn main() {
+    let path = env::current_dir().expect("Error");
+    println!("The current directory is {}", path.display());
     let help =
         "Command list:\n
         lion-cli <fileName.extension> -> Creates a file with filler code of the extension type\n
