@@ -19,6 +19,7 @@ pub enum FileType {
     Py,
 }
 
+#[allow(dead_code)]
 pub struct Language {
     pub file_extension: FileType,
     pub dependency_file: String,
@@ -26,13 +27,13 @@ pub struct Language {
 }
 
 pub trait Functions {
-    fn new(file_name: &String, file_ext: FileType);
-    fn dependency(extension: FileType, file_name: &String, dep: String, git_url: String);
+    fn new(file_name: &String, file_ext: FileType, dependency: String);
+    fn dependency(extension: FileType, file_name: &String, dep: String);
     fn run(file_ext: FileType, file_name: &String);
 }
 
 impl Functions for Language {
-    fn new(file_name: &String, file_ext: FileType) {
+    fn new(file_name: &String, file_ext: FileType, dep: String) {
         match file_ext {
             FileType::Py => fs::write(file_name, "print(\"Hello Lion!\")").expect("An Unexpected error occured; please try again!"),
 
@@ -53,9 +54,12 @@ impl Functions for Language {
             FileType::Java => fs::write(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}").expect("An Unexpected error occured; please try again!"),
             FileType::Placeholder => panic!("An error occured; Please try again")
         }
+        if !dep.is_empty() {
+            Self::dependency(file_ext, file_name, dep);
+        }
     }
 
-    fn dependency(extension: FileType, file_name: &String, dep: String, git_url: String) {
+    fn dependency(extension: FileType, file_name: &String, dep: String) {
         match extension {
             FileType::Py => {
                 let contents = match fs::read_to_string(file_name) {

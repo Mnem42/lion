@@ -1,12 +1,7 @@
 use std::env;
 
-use languages::{FileType, Functions, Language, MyCommand};
-
-mod dependency;
+use languages::{FileType, Functions, Language};
 mod languages;
-mod runner;
-mod util;
-mod writer;
 
 struct Input {
     command: String,
@@ -52,14 +47,14 @@ fn main() {
     };
 
     if args.command.to_lowercase() == "help" {
-        //
-        println!("Help command called.\n{help}");
         command_base.command = languages::MyCommand::Help;
+        println!("Help command called.\n{help}");
+
         //
     } else if args.command.to_lowercase() == "new" {
         //
         command_base.command = languages::MyCommand::New;
-        Language::new(&args.file, command_base.file_extension);
+        Language::new(&args.file, command_base.file_extension, args.add_ons);
         println!("Created .{extension} file");
         //
     } else if args.command.to_lowercase() == "dep" {
@@ -69,7 +64,6 @@ fn main() {
             command_base.file_extension,
             &args.file,
             args.add_ons.clone(),
-            String::from(""),
         );
         //
     } else if args.command.to_lowercase() == "run" {
