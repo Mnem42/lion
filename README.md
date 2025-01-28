@@ -1,5 +1,5 @@
 # Lion is an open-source CLI tool that makes developers lives easier
-## Lion is a project under development
+## Lion is a project ready for use but still under development
 It helps by creating the file with some preset code and add external dependencies for you (implemented for rust and python)
 
 See the
