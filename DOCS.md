@@ -14,17 +14,17 @@ Prerequisites: Cargo and Rust
 ### File creation:
 ```bash
 
-  lion-cli main.rs
+  lion-cli new main.rs
   # Creates a file called main.rs
-  lion-cli main.py
+  lion-cli new main.py
   # Creates a file called main.py
-  lion-cli main.cpp
+  lion-cli new main.cpp
   # Creates a file called main.cpp
-  lion-cli main.c
+  lion-cli new main.c
   # Creates a file called main.c
-  lion-cli main.go
+  lion-cli new main.go
   # Creates a file called main.go
-  lion-cli main.java
+  lion-cli new main.java
   # Creates a file called main.java
 ```
 
@@ -33,12 +33,12 @@ Prerequisites: Cargo and Rust
 
 ```bash
 
-  lion-cli dep serde main.rs
-  lion-cli dep serde main.py
+  lion-cli dep main.rs serde
+  lion-cli dep main.py serde
   # Adds serde as a dependency (only supported for rust and python)
 
-  lion-cli main.rs serde
-  lion-cli main.py serde
+  lion-cli new main.rs serde
+  lion-cli new main.py serde
   # Adds serde as a dependency and creates the respective file
 
 ```
