@@ -1,5 +1,9 @@
 use std::env;
+
+use languages::{FileType, Functions, Language, MyCommand};
+
 mod dependency;
+mod languages;
 mod runner;
 mod util;
 mod writer;
@@ -28,26 +32,50 @@ fn main() {
         add_ons: file.unwrap_or(String::new()),
     };
 
+    let extension = args.file.split('.').last().unwrap_or("");
+
+    // Match the file extension to determine the `FileType`
+    let file_ext = match extension {
+        "cpp" => FileType::Cpp,
+        "rs" => FileType::Rs,
+        "c" => FileType::C,
+        "go" => FileType::Go,
+        "py" => FileType::Py,
+        "java" => FileType::Java,
+        _ => FileType::Placeholder,
+    };
+
+    let mut command_base = languages::Language {
+        file_extension: file_ext,
+        dependency_file: String::from(""),
+        command: languages::MyCommand::Empty,
+    };
+
     if args.command.to_lowercase() == "help" {
         //
         println!("Help command called.\n{help}");
+        command_base.command = languages::MyCommand::Help;
         //
     } else if args.command.to_lowercase() == "new" {
         //
-        let extension = args.file.split('.').last().unwrap_or("");
-        writer::write(extension, &args.file, args.add_ons);
+        command_base.command = languages::MyCommand::New;
+        Language::new(&args.file, command_base.file_extension);
         println!("Created .{extension} file");
         //
     } else if args.command.to_lowercase() == "dep" {
         // Only add external dependency
-        let extension = args.file.split('.').last().unwrap_or("");
-        dependency::dependency(extension, &args.file, args.add_ons.clone());
+        command_base.command = languages::MyCommand::Dep;
+        Language::dependency(
+            command_base.file_extension,
+            &args.file,
+            args.add_ons.clone(),
+            String::from(""),
+        );
         //
     } else if args.command.to_lowercase() == "run" {
         //
-        let run_target = args.file;
-        let extension = run_target.split('.').last().unwrap_or("");
-        runner::run(extension, &run_target);
+        command_base.command = languages::MyCommand::Run;
+        Language::run(command_base.file_extension, &args.file);
         //
     } else {
         println!("Unknown command;\nRun with 'help' to see command list");
