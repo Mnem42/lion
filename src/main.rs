@@ -40,8 +40,8 @@ fn main() {
         //
     } else if args.command.to_lowercase() == "dep" {
         // Only add external dependency
-        let extension = args.add_ons.split('.').last().unwrap_or("");
-        dependency::dependency(extension, &args.command, args.file);
+        let extension = args.file.split('.').last().unwrap_or("");
+        dependency::dependency(extension, &args.file, args.add_ons.clone());
         //
     } else if args.command.to_lowercase() == "run" {
         //
