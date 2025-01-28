@@ -37,7 +37,7 @@ fn main() {
     } else if args.command.to_lowercase() == "new" {
         //
         let extension = args.file.split('.').last().unwrap_or("");
-        writer::write(extension, &args.add_ons, args.file.clone());
+        writer::write(extension, &args.file, args.add_ons);
         println!("Created .{extension} file");
         //
     } else if args.command.to_lowercase() == "dep" {
