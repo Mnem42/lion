@@ -111,6 +111,14 @@ impl Functions for Language {
 
     fn run(file_ext: FileType, file_name: &String) {
         match file_ext {
+            FileType::Go => {
+                Command::new("go")
+                    .arg("run")
+                    .arg(".")
+                    .status()
+                    .expect("An error occured, please try again.");
+                println!("\nRan the code")
+            }
             FileType::Java => {
                 Command::new("javac")
                     .arg(file_name)
