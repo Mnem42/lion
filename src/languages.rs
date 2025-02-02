@@ -111,8 +111,36 @@ impl Functions for Language {
 
     fn run(file_ext: FileType, file_name: &String) {
         match file_ext {
+            FileType::Java => {
+                Command::new("javac")
+                    .arg(file_name)
+                    .status()
+                    .expect("An error occured; Please try again.");
+                println!("\nCompiled...\n");
+                let file_prefix = file_name
+                    .split('.')
+                    .next()
+                    .expect("An error occured, please check your file name");
+                Command::new("java")
+                    .arg(file_prefix)
+                    .status()
+                    .expect("An error occured; Please try again.");
+            }
             FileType::Cpp => {
                 Command::new("g++")
+                    .arg(file_name)
+                    .arg("-o")
+                    .arg("lion_compiled")
+                    .status()
+                    .expect("An error occured; Please try again.");
+                println!("\nCompiled...\n");
+                Command::new("./lion_compiled".to_string())
+                    .status()
+                    .expect("An error occured; Please try again.");
+                println!("\nRan the code successfully");
+            }
+            FileType::C => {
+                Command::new("gcc")
                     .arg(file_name)
                     .arg("-o")
                     .arg("lion_compiled")
