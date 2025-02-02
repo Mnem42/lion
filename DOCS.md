@@ -63,6 +63,8 @@ Prerequisites: Cargo and Rust
   lion-cli run main.c
   lion-cli run main.py
   lion-cli run main.rs
-  # Compiles and runs the code (requires g++, gcc, python3, rustc to be installed)
+  lion-cli run main.go
+  lion-cli run main.java
+  # Compiles and runs the code (requires respective compilers to be installed and setup)
 
 ```
