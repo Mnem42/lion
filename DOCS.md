@@ -60,8 +60,9 @@ Prerequisites: Cargo and Rust
 ```bash
 
   lion-cli run main.cpp
+  lion-cli run main.c
   lion-cli run main.py
   lion-cli run main.rs
-  # Compiles and runs the code (requires g++, python3, rustc to be installed)
+  # Compiles and runs the code (requires g++, gcc, python3, rustc to be installed)
 
 ```
