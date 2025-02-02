@@ -7,6 +7,7 @@ Prerequisites: Cargo and Rust
 ```bash
   cargo install Lion-cli
 ```
+#### Note the capital L in lion-cli
 
 ## Usage:
 
