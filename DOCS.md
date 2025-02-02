@@ -69,3 +69,10 @@ Prerequisites: Cargo and Rust
   # Compiles and runs the code (requires respective compilers to be installed and setup)
 
 ```
+
+  C++ code requires g++
+  C code requires gcc
+  Python code requires python3
+  Rust code requires rustc
+  Go code requires go
+  Java code requires JDK
