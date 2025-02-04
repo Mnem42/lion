@@ -17,14 +17,14 @@ fn main() {
         lion-cli dep <dependency> <fileName.extension> -> adds the respective dependency to the file\n
         lion-cli run <fileName.extension> -> runs the file specified (see the docs on supported languages)\n";
 
-    let file_name = env::args().nth(1);
-    let ext_dep = env::args().nth(2);
-    let file = env::args().nth(3);
+    let first_arg = env::args().nth(1);
+    let second_arg = env::args().nth(2);
+    let third_arg = env::args().nth(3);
 
     let args = Input {
-        command: file_name.unwrap_or(String::new()),
-        file: ext_dep.unwrap_or(String::new()),
-        add_ons: file.unwrap_or(String::new()),
+        command: first_arg.unwrap_or(String::new()),
+        file: second_arg.unwrap_or(String::new()),
+        add_ons: third_arg.unwrap_or(String::new()),
     };
 
     let extension = args.file.split('.').last().unwrap_or("");
@@ -46,32 +46,28 @@ fn main() {
         command: languages::MyCommand::Empty,
     };
 
-    if args.command.to_lowercase() == "help" {
-        command_base.command = languages::MyCommand::Help;
-        println!("Help command called.\n{help}");
-
-        //
-    } else if args.command.to_lowercase() == "new" {
-        //
-        command_base.command = languages::MyCommand::New;
-        Language::new(&args.file, command_base.file_extension, args.add_ons);
-        println!("Created .{extension} file");
-        //
-    } else if args.command.to_lowercase() == "dep" {
-        // Only add external dependency
-        command_base.command = languages::MyCommand::Dep;
-        Language::dependency(
-            command_base.file_extension,
-            &args.file,
-            args.add_ons.clone(),
-        );
-        //
-    } else if args.command.to_lowercase() == "run" {
-        //
-        command_base.command = languages::MyCommand::Run;
-        Language::run(command_base.file_extension, &args.file);
-        //
-    } else {
-        println!("Unknown command;\nRun with 'help' to see command list");
+    match args.command.to_lowercase().as_str() {
+        "new" => {
+            command_base.command = languages::MyCommand::New;
+            Language::new(&args.file, command_base.file_extension, args.add_ons);
+            println!("Created .{extension} file");
+        }
+        "help" => {
+            command_base.command = languages::MyCommand::Help;
+            println!("Help command called.\n{help}");
+        }
+        "dep" => {
+            command_base.command = languages::MyCommand::Dep;
+            Language::dependency(
+                command_base.file_extension,
+                &args.file,
+                args.add_ons.clone(),
+            );
+        }
+        "run" => {
+            command_base.command = languages::MyCommand::Run;
+            Language::run(command_base.file_extension, &args.file);
+        }
+        _ => eprintln!("Unknown command;\nRun with 'help' to see command list"),
     }
 }
