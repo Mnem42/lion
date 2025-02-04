@@ -14,7 +14,6 @@ on how to use it and which languages are supported for which command:
 
 - [ ] Project creation abilities
 - [ ] Automatic linking of external libraries with git
-- [ ]
 - [ ] Additional features coming soon
 
 ## Current list of supported languages:
