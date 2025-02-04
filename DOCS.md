@@ -70,6 +70,13 @@ Prerequisites: Cargo and Rust
 
 ```
 
+### Making projects:
+```bash
+
+  lion-cli proj main.rs proj-name
+  # Creates a directory called proj-name and creates a main.rs file in an src folder in proj-name
+```
+
   C++ code requires g++
   C code requires gcc
   Python code requires python3
