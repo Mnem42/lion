@@ -7,6 +7,7 @@ pub enum MyCommand {
     New,
     Dep,
     Run,
+    Proj,
 }
 
 pub enum FileType {
@@ -30,6 +31,7 @@ pub trait Functions {
     fn new(file_name: &String, file_ext: FileType, dependency: String);
     fn dependency(extension: FileType, file_name: &String, dep: String);
     fn run(file_ext: FileType, file_name: &String);
+    fn project(file_ext: FileType, proj_name: &String, code_file: String);
 }
 
 impl Functions for Language {
@@ -196,5 +198,34 @@ impl Functions for Language {
                 panic!("Running hasn't been supported yet for the specified file type");
             }
         }
+    }
+
+    fn project(file_ext: FileType, proj_name: &String, code_file: String) {
+        fs::DirBuilder::new()
+            .recursive(true)
+            .create(proj_name)
+            .expect("Error creating directory");
+        fs::DirBuilder::new()
+            .recursive(true)
+            .create(format!("{proj_name}/src"))
+            .expect("Error creating directory");
+
+        match file_ext {
+            FileType::Rs => {
+                fs::write(format!("{proj_name}/Cargo.toml"), "").expect("Error creating Cargo.toml")
+            }
+            FileType::Placeholder => eprintln!("error: Error, unknown file extension"),
+            _ => {}
+        }
+
+        Command::new("cd")
+            .arg(proj_name)
+            .status()
+            .expect("An error occurred; Please try again");
+        Self::new(
+            &format!("{proj_name}/src/{code_file}"),
+            file_ext,
+            String::from(""),
+        );
     }
 }

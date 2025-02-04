@@ -68,6 +68,10 @@ fn main() {
             command_base.command = languages::MyCommand::Run;
             Language::run(command_base.file_extension, &args.file);
         }
+        "proj" => {
+            command_base.command = languages::MyCommand::Proj;
+            Language::project(command_base.file_extension, &args.add_ons, args.file);
+        }
         _ => eprintln!("Unknown command;\nRun with 'help' to see command list"),
     }
 }
