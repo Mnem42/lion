@@ -11,9 +11,11 @@ on how to use it and which languages are supported for which command:
 - [x] Add external dependencies - Added for rust and python
 - [x] Allow dependency feature to be called individually
 - [x] Add a compiling + running feature
+- [x] Project creation with a preset file structure
 
 - [ ] Project creation abilities
 - [ ] Automatic linking of external libraries with git
+- [ ] Reliance on lion.toml for running rather than a Cargo.toml (allowing for external dependencies to be used more easily)
 - [ ] Additional features coming soon
 
 ## Current list of supported languages:
