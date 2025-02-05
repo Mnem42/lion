@@ -40,21 +40,26 @@ impl Functions for Language {
             FileType::Py => fs::write(file_name, "print(\"Hello Lion!\")").expect("An Unexpected error occured; please try again!"),
 
             FileType::Rs => fs::write(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}").expect("An Unexpected error occured; please try again!"),
+
             FileType::Cpp => fs::write(
                 file_name,
                 "#include <iostream>\n\nint main() {\n    std::cout << \"Hello, Lion!\" << std::endl;\n    return 0;\n}",
             ).expect("An Unexpected error occured; please try again!"),
+
             FileType::C => fs::write(file_name, "#include <stdio.h>
 
             int main() {
                 printf(\"Hello Lion!\");
                 return 0;
             }").expect("An Unexpected error occured; please try again!"),
+
             FileType::Go => fs::write(
                 file_name,
                 "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}").expect("An Unexpected error occured; please try again!"),
+
             FileType::Java => fs::write(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}").expect("An Unexpected error occured; please try again!"),
-            FileType::Placeholder => panic!("An error occured; Please try again")
+
+            FileType::Placeholder => panic!("An error occured; Unsupported file type")
         }
         if !dep.is_empty() {
             Self::dependency(file_ext, file_name, dep);
@@ -112,18 +117,21 @@ impl Functions for Language {
     }
 
     fn run(file_ext: FileType, file_name: &String) {
+        fs::create_dir_all("target").expect("Failed to create target directory");
         match file_ext {
             FileType::Go => {
                 Command::new("go")
                     .arg("run")
-                    .arg(".")
+                    .arg(format!("src/{file_name}"))
                     .status()
                     .expect("An error occured, please try again.");
                 println!("\nRan the code")
             }
             FileType::Java => {
                 Command::new("javac")
-                    .arg(file_name)
+                    .arg("-d")
+                    .arg("target")
+                    .arg(format!("src/{file_name}"))
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
@@ -132,6 +140,8 @@ impl Functions for Language {
                     .next()
                     .expect("An error occured, please check your file name");
                 Command::new("java")
+                    .arg("-cp")
+                    .arg("target")
                     .arg(file_prefix)
                     .status()
                     .expect("An error occured; Please try again.");
@@ -140,11 +150,11 @@ impl Functions for Language {
                 Command::new("g++")
                     .arg(file_name)
                     .arg("-o")
-                    .arg("lion_compiled")
+                    .arg("target/lion_compiled")
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
-                Command::new("./lion_compiled".to_string())
+                Command::new("./target/lion_compiled".to_string())
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nRan the code successfully");
@@ -153,11 +163,11 @@ impl Functions for Language {
                 Command::new("gcc")
                     .arg(file_name)
                     .arg("-o")
-                    .arg("lion_compiled")
+                    .arg("target/lion_compiled")
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
-                Command::new("./lion_compiled".to_string())
+                Command::new("./target/lion_compiled".to_string())
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nRan the code successfully");
@@ -166,22 +176,22 @@ impl Functions for Language {
                 if cfg!(target_os = "windows") {
                     Command::new("rustc")
                         .arg(file_name)
-                        .args(["-o", "lion_compiled"])
+                        .args(["-o", "target/lion_compiled"])
                         .status()
                         .expect("An error occured; Please try again.");
                     println!("\nCompiled...\n");
-                    Command::new(".\\lion_compiled.exe".to_string())
+                    Command::new(".\\target/lion_compiled.exe".to_string())
                         .status()
                         .expect("An error occured; Please try again.");
                     println!("\nRan the code successfully");
                 } else {
                     Command::new("rustc")
                         .arg(file_name)
-                        .args(["-o", "lion_compiled"])
+                        .args(["-o", "target/lion_compiled"])
                         .status()
                         .expect("An error occured; Please try again.");
                     println!("\nCompiled...\n");
-                    Command::new("./lion_compiled".to_string())
+                    Command::new("./target/lion_compiled".to_string())
                         .status()
                         .expect("An error occured; Please try again.");
                     println!("\nRan the code successfully");
@@ -209,6 +219,11 @@ impl Functions for Language {
             .recursive(true)
             .create(format!("{proj_name}/src"))
             .expect("Error creating directory");
+        fs::DirBuilder::new()
+            .recursive(true)
+            .create(format!("{proj_name}/target"))
+            .expect("Error creating directory");
+        fs::write(format!("{proj_name}/.gitignore"), "/target").expect("Error creating .gitignore");
 
         match file_ext {
             FileType::Rs => {
