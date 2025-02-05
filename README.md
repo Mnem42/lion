@@ -18,9 +18,9 @@ on how to use it and which languages are supported for which command:
 - [ ] Additional features coming soon...
 
 ## Current list of supported languages:
-  - ### Rust
-  - ### Python
-  - ### C++
+  - Rust
+  - Python
+  - C++
   - C
   - Go
   - Java
