@@ -16,6 +16,7 @@ on how to use it and which languages are supported for which command:
 - [ ] Project creation abilities
 - [ ] Automatic linking of external libraries with git
 - [ ] Reliance on lion.toml for running rather than a Cargo.toml (allowing for external dependencies to be used more easily)
+- [ ] Don't require external compilers (use a compiler based inside lion)
 - [ ] Additional features coming soon
 
 ## Current list of supported languages:
