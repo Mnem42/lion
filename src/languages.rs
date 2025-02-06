@@ -137,13 +137,9 @@ impl Functions for Language {
     }
 
     fn run(file_ext: FileType, file_name: &String) {
-        match fs::DirBuilder::new()
+        if fs::DirBuilder::new()
             .recursive(true)
-            .create(format!("target"))
-        {
-            Err(_) => {}
-            _ => {}
-        }
+            .create("target").is_err() {}
         match file_ext {
             FileType::Go => {
                 Command::new("go")
