@@ -212,7 +212,7 @@ impl Functions for Language {
 
         match file_ext {
             FileType::Rs => {
-                Command::new("Cargo")
+                Command::new("cargo")
                     .arg("new")
                     .arg(proj_name)
                     .status()
