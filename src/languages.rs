@@ -2,7 +2,9 @@ use std::fs;
 use std::process::Command;
 
 fn writer(file_name: &String, file_contents: &str) {
-    if let Err(error) = fs::write(file_name, file_contents) { panic!("An error occured:\n{error}") }
+    if let Err(error) = fs::write(file_name, file_contents) {
+        panic!("An error occured:\n{error}")
+    }
 }
 
 pub enum MyCommand {
@@ -116,7 +118,13 @@ impl Functions for Language {
     }
 
     fn run(file_ext: FileType, file_name: &String) {
-        fs::create_dir_all("target").expect("Failed to create target directory");
+        match fs::DirBuilder::new()
+            .recursive(true)
+            .create(format!("target"))
+        {
+            Err(_) => {}
+            _ => {}
+        }
         match file_ext {
             FileType::Go => {
                 Command::new("go")
