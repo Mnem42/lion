@@ -75,11 +75,30 @@ impl Functions for Language {
     fn dependency(extension: FileType, file_name: &String, dep: String) {
         match extension {
             FileType::Py => {
+                let new_git_url = String::from("git+") + dep.as_str();
+
+                Command::new("pip")
+                    .arg(new_git_url)
+                    .status()
+                    .expect("Unable to add dependendcy");
+                let mut dep_loop = dep;
+                let dep_git = loop {
+                    match dep_loop.split('/').next() {
+                        None => {
+                            break dep_loop;
+                        }
+                        Some(result) => dep_loop = result.to_string(),
+                    };
+                };
+                //remove .git from the end:
+                let (dep_name, _) = dep_git.rsplit_once('.').unwrap();
+
                 let contents = match fs::read_to_string(file_name) {
                     Ok(value) => value,
                     Err(_) => "\nprint(\"Hello Lion!\")".to_string(),
                 };
-                writer(file_name, format!("import {dep}\n{contents}").as_str());
+
+                writer(file_name, format!("import {dep_name}\n{contents}").as_str());
             }
             FileType::Rs => {
                 match fs::read_to_string("Cargo.toml") {
