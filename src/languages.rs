@@ -2,10 +2,7 @@ use std::fs;
 use std::process::Command;
 
 fn writer(file_name: &String, file_contents: &str) {
-    match fs::write(file_name, file_contents) {
-        Err(error) => panic!("An error occured:\n{error}"),
-        _ => {}
-    }
+    if let Err(error) = fs::write(file_name, file_contents) { panic!("An error occured:\n{error}") }
 }
 
 pub enum MyCommand {
@@ -165,7 +162,7 @@ impl Functions for Language {
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
-                Command::new("./target/lion_compiled".to_string())
+                Command::new("./target/lion_compiled")
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nRan the code successfully");
@@ -178,7 +175,7 @@ impl Functions for Language {
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nCompiled...\n");
-                Command::new("./target/lion_compiled".to_string())
+                Command::new("./target/lion_compiled")
                     .status()
                     .expect("An error occured; Please try again.");
                 println!("\nRan the code successfully");

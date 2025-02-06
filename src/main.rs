@@ -22,9 +22,9 @@ fn main() {
     let third_arg = env::args().nth(3);
 
     let args = Input {
-        command: first_arg.unwrap_or(String::new()),
-        file: second_arg.unwrap_or(String::new()),
-        add_ons: third_arg.unwrap_or(String::new()),
+        command: first_arg.unwrap_or_default(),
+        file: second_arg.unwrap_or_default(),
+        add_ons: third_arg.unwrap_or_default(),
     };
 
     let extension = args.file.split('.').last().unwrap_or("");
