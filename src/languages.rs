@@ -73,6 +73,10 @@ impl Functions for Language {
     }
 
     fn dependency(extension: FileType, file_name: &String, dep: String) {
+        let _current_dir: String = std::env::current_dir()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
         match extension {
             FileType::Py => {
                 let new_git_url = String::from("git+") + dep.as_str();
@@ -122,14 +126,28 @@ impl Functions for Language {
                 writer(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}");
             }
             FileType::Cpp => {
+                /*
+                Command::new("git")
+                    .arg("clone")
+                    .arg(dep.clone())
+                    .arg(format!("{current_dir}/external"))
+                    .status()
+                    .expect("Unable to clone git repository");
                 let contents = match fs::read_to_string(file_name){
                     Ok(value) => value,
                     _ => String::from("#include <iostream>\n\nint main() {\n    std::cout << \"Hello, Lion!\" << std::endl;\n    return 0;\n}")
                 };
-                let final_content = format!("#include \"{dep}/{dep}.h\"\n{contents}");
+                let final_content = format!("#include \"external/{dep}.h\"\n{contents}");
                 writer(file_name, final_content.as_str());
+                */
+                todo!()
             }
-
+            FileType::C => {
+                todo!()
+            }
+            FileType::Go => {
+                Command::new("go").arg("get").arg(dep);
+            }
             _ => {
                 eprintln!("Format not supported for external dependencies");
             }
@@ -139,14 +157,34 @@ impl Functions for Language {
     fn run(file_ext: FileType, file_name: &String) {
         if fs::DirBuilder::new()
             .recursive(true)
-            .create("target").is_err() {}
+            .create("target")
+            .is_err()
+        {}
         match file_ext {
             FileType::Go => {
-                Command::new("go")
-                    .arg("run")
+                match Command::new("go")
+                    .arg("build")
                     .arg(format!("src/{file_name}"))
+                    .arg("-o")
+                    .arg("target/lion_compiled")
                     .status()
-                    .expect("An error occured, please try again.");
+                {
+                    Err(e) => {
+                        panic!("An error occured while compiling your go code: {e}");
+                    }
+                    Ok(_) => {
+                        println!("\n\nCompiled the code successfully!\n");
+                    }
+                }
+
+                match Command::new("./target/lion_compiled").status() {
+                    Ok(_) => {
+                        println!("\n\nRan the code successfully!\n");
+                    }
+                    Err(e) => {
+                        panic!("An error occured while running your go code: {e}");
+                    }
+                }
                 println!("\nRan the code");
             }
             FileType::Java => {
@@ -223,8 +261,6 @@ impl Functions for Language {
     }
 
     fn project(file_ext: FileType, proj_name: &String, code_file: String) {
-        //create Project directory:
-
         match file_ext {
             FileType::Rs => {
                 Command::new("cargo")
@@ -232,34 +268,60 @@ impl Functions for Language {
                     .arg(proj_name)
                     .status()
                     .expect("Error creating new rust project");
+                return;
             }
-            FileType::Placeholder => panic!("error: Error, unknown file extension"),
+            FileType::Placeholder => {
+                panic!("error: Error, unknown file extension");
+            }
+            FileType::Cpp => {
+                //create common directories:
+                common_dir(proj_name);
+
+                fs::DirBuilder::new()
+                    .recursive(true)
+                    .create(format!("{proj_name}/external"))
+                    .expect("Error while creating externals file");
+            }
+            FileType::Go => {
+                Command::new("go")
+                    .arg("mod")
+                    .arg("init")
+                    .arg(format!("./{proj_name}"))
+                    .status()
+                    .expect("Error initialising go project");
+            }
             _ => {
-                fs::DirBuilder::new()
-                    .recursive(true)
-                    .create(proj_name)
-                    .expect("Error creating directory");
-
-                //Create src folder inside project directory
-                fs::DirBuilder::new()
-                    .recursive(true)
-                    .create(format!("{proj_name}/src"))
-                    .expect("Error creating directory");
-
-                //create target folder:
-                fs::DirBuilder::new()
-                    .recursive(true)
-                    .create(format!("{proj_name}/target"))
-                    .expect("Error creating directory");
-                writer(&format!("{proj_name}/.gitignore"), "/target");
-
-                //create code file:
-                Self::new(
-                    &format!("{proj_name}/src/{code_file}"),
-                    file_ext,
-                    String::from(""),
-                );
+                //create common directories:
+                common_dir(proj_name);
             }
         }
+
+        //create code file:
+        Self::new(
+            &format!("{proj_name}/src/{code_file}"),
+            file_ext,
+            String::from(""),
+        );
     }
+}
+
+fn common_dir(proj_name: &String) {
+    //create project folder
+    fs::DirBuilder::new()
+        .recursive(true)
+        .create(proj_name)
+        .expect("Error creating directory");
+
+    //Create src folder inside project directory
+    fs::DirBuilder::new()
+        .recursive(true)
+        .create(format!("{proj_name}/src"))
+        .expect("Error creating directory");
+
+    //create target folder:
+    fs::DirBuilder::new()
+        .recursive(true)
+        .create(format!("{proj_name}/target"))
+        .expect("Error creating directory");
+    writer(&format!("{proj_name}/.gitignore"), "/target");
 }
