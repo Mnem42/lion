@@ -82,9 +82,10 @@ impl Functions for Language {
                 let new_git_url = String::from("git+") + dep.as_str();
 
                 Command::new("pip")
+                    .arg("install")
                     .arg(new_git_url)
                     .status()
-                    .expect("Unable to add dependendcy");
+                    .expect("Unable to add dependency");
                 let mut dep_loop = dep;
                 let dep_git = loop {
                     match dep_loop.split('/').next() {
