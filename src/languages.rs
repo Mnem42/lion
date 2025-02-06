@@ -1,6 +1,13 @@
 use std::fs;
 use std::process::Command;
 
+fn writer(file_name: &String, file_contents: &str) {
+    match fs::write(file_name, file_contents) {
+        Err(error) => panic!("An error occured:\n{error}"),
+        _ => {}
+    }
+}
+
 pub enum MyCommand {
     Empty,
     Help,
@@ -37,27 +44,27 @@ pub trait Functions {
 impl Functions for Language {
     fn new(file_name: &String, file_ext: FileType, dep: String) {
         match file_ext {
-            FileType::Py => fs::write(file_name, "print(\"Hello Lion!\")").expect("An Unexpected error occured; please try again!"),
+            FileType::Py => writer(file_name, "print(\"Hello Lion!\")"),
 
-            FileType::Rs => fs::write(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}").expect("An Unexpected error occured; please try again!"),
+            FileType::Rs => writer(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}"),
 
-            FileType::Cpp => fs::write(
+            FileType::Cpp => writer(
                 file_name,
                 "#include <iostream>\n\nint main() {\n    std::cout << \"Hello, Lion!\" << std::endl;\n    return 0;\n}",
-            ).expect("An Unexpected error occured; please try again!"),
+            ),
 
-            FileType::C => fs::write(file_name, "#include <stdio.h>
+            FileType::C => writer(file_name, "#include <stdio.h>
 
             int main() {
                 printf(\"Hello Lion!\");
                 return 0;
-            }").expect("An Unexpected error occured; please try again!"),
+            }"),
 
-            FileType::Go => fs::write(
+            FileType::Go => writer(
                 file_name,
-                "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}").expect("An Unexpected error occured; please try again!"),
+                "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}"),
 
-            FileType::Java => fs::write(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}").expect("An Unexpected error occured; please try again!"),
+            FileType::Java => writer(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}"),
 
             FileType::Placeholder => panic!("An error occured; Unsupported file type")
         }
@@ -73,32 +80,28 @@ impl Functions for Language {
                     Ok(value) => value,
                     Err(_) => "\nprint(\"Hello Lion!\")".to_string(),
                 };
-                fs::write(file_name, format!("import {dep}\n{contents}").as_str())
-                    .expect("An Unexpected error occured; please try again!")
+                writer(file_name, format!("import {dep}\n{contents}").as_str());
             }
             FileType::Rs => {
                 match fs::read_to_string("Cargo.toml") {
                     Ok(value) => {
-                        let (before, after) = value
+                        let (prefix, suffix) = value
                             .split_once("[dependencies]")
-                            .expect("You have reached unreachable code");
+                            .expect("No [dependencies] section in your Cargo.toml file");
 
                         let final_content =
-                            format!("{}[dependencies]\n{} = \"*\"{}\n", before, dep, after);
-                        fs::write(&String::from("Cargo.toml"), final_content.as_str())
-                            .expect("An Unexpected error occured; please try again!");
+                            format!("{}[dependencies]\n{} = \"*\"{}\n", prefix, dep, suffix);
+                        writer(&String::from("Cargo.toml"), final_content.as_str());
                     }
                     Err(_) => {
-                        fs::write(
+                        writer(
                             &String::from("Cargo.toml"),
-                            format!("[dependencies]\n{dep} = \"*\""),
-                        )
-                        .expect("An Unexpected error occured; please try again!");
+                            format!("[dependencies]\n{dep} = \"*\"").as_str(),
+                        );
                     }
                 };
 
-                fs::write(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}")
-                    .expect("An Unexpected error occured; please try again!");
+                writer(file_name, "fn main() {\n    println!(\"Hello Lion!\");\n}");
             }
             FileType::Cpp => {
                 let contents = match fs::read_to_string(file_name){
@@ -106,8 +109,7 @@ impl Functions for Language {
                     _ => String::from("#include <iostream>\n\nint main() {\n    std::cout << \"Hello, Lion!\" << std::endl;\n    return 0;\n}")
                 };
                 let final_content = format!("#include \"{dep}/{dep}.h\"\n{contents}");
-                fs::write(file_name, final_content.as_str())
-                    .expect("An Unexpected error occured; please try again!");
+                writer(file_name, final_content.as_str());
             }
 
             _ => {
@@ -125,26 +127,35 @@ impl Functions for Language {
                     .arg(format!("src/{file_name}"))
                     .status()
                     .expect("An error occured, please try again.");
-                println!("\nRan the code")
+                println!("\nRan the code");
             }
             FileType::Java => {
-                Command::new("javac")
+                match Command::new("javac")
                     .arg("-d")
                     .arg("target")
                     .arg(format!("src/{file_name}"))
                     .status()
-                    .expect("An error occured; Please try again.");
-                println!("\nCompiled...\n");
+                {
+                    Ok(_) => println!("\nCompiled...\n"),
+                    Err(error) => panic!("An Error occured while compiling the Java code: {error}"),
+                }
                 let file_prefix = file_name
                     .split('.')
                     .next()
                     .expect("An error occured, please check your file name");
-                Command::new("java")
+                match Command::new("java")
                     .arg("-cp")
                     .arg("target")
                     .arg(file_prefix)
                     .status()
-                    .expect("An error occured; Please try again.");
+                {
+                    Ok(_) => {
+                        println!("\n\nRan your code successfully!")
+                    }
+                    Err(error) => {
+                        panic!("An error occured while running your code: {error}");
+                    }
+                }
             }
             FileType::Cpp => {
                 Command::new("g++")
@@ -211,23 +222,28 @@ impl Functions for Language {
     }
 
     fn project(file_ext: FileType, proj_name: &String, code_file: String) {
+        //create Project directory:
         fs::DirBuilder::new()
             .recursive(true)
             .create(proj_name)
             .expect("Error creating directory");
+
+        //Create src folder inside project directory
         fs::DirBuilder::new()
             .recursive(true)
             .create(format!("{proj_name}/src"))
             .expect("Error creating directory");
+
+        //create target folder:
         fs::DirBuilder::new()
             .recursive(true)
             .create(format!("{proj_name}/target"))
             .expect("Error creating directory");
-        fs::write(format!("{proj_name}/.gitignore"), "/target").expect("Error creating .gitignore");
+        writer(&format!("{proj_name}/.gitignore"), "/target");
 
         match file_ext {
             FileType::Rs => {
-                fs::write(format!("{proj_name}/Cargo.toml"), "").expect("Error creating Cargo.toml")
+                writer(&format!("{proj_name}/Cargo.toml"), "");
             }
             FileType::Placeholder => eprintln!("error: Error, unknown file extension"),
             _ => {}
@@ -237,6 +253,7 @@ impl Functions for Language {
             .arg(proj_name)
             .status()
             .expect("An error occurred; Please try again");
+
         Self::new(
             &format!("{proj_name}/src/{code_file}"),
             file_ext,
