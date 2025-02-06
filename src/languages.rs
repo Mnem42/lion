@@ -184,29 +184,10 @@ impl Functions for Language {
                 println!("\nRan the code successfully");
             }
             FileType::Rs => {
-                if cfg!(target_os = "windows") {
-                    Command::new("rustc")
-                        .arg(file_name)
-                        .args(["-o", "target/lion_compiled"])
-                        .status()
-                        .expect("An error occured; Please try again.");
-                    println!("\nCompiled...\n");
-                    Command::new(".\\target/lion_compiled.exe".to_string())
-                        .status()
-                        .expect("An error occured; Please try again.");
-                    println!("\nRan the code successfully");
-                } else {
-                    Command::new("rustc")
-                        .arg(file_name)
-                        .args(["-o", "target/lion_compiled"])
-                        .status()
-                        .expect("An error occured; Please try again.");
-                    println!("\nCompiled...\n");
-                    Command::new("./target/lion_compiled".to_string())
-                        .status()
-                        .expect("An error occured; Please try again.");
-                    println!("\nRan the code successfully");
-                };
+                Command::new("cargo")
+                    .arg("run")
+                    .status()
+                    .expect("An error occured; Please try again.");
             }
             FileType::Py => {
                 Command::new("python3")
@@ -223,41 +204,42 @@ impl Functions for Language {
 
     fn project(file_ext: FileType, proj_name: &String, code_file: String) {
         //create Project directory:
-        fs::DirBuilder::new()
-            .recursive(true)
-            .create(proj_name)
-            .expect("Error creating directory");
-
-        //Create src folder inside project directory
-        fs::DirBuilder::new()
-            .recursive(true)
-            .create(format!("{proj_name}/src"))
-            .expect("Error creating directory");
-
-        //create target folder:
-        fs::DirBuilder::new()
-            .recursive(true)
-            .create(format!("{proj_name}/target"))
-            .expect("Error creating directory");
-        writer(&format!("{proj_name}/.gitignore"), "/target");
 
         match file_ext {
             FileType::Rs => {
-                writer(&format!("{proj_name}/Cargo.toml"), "");
+                Command::new("Cargo")
+                    .arg("new")
+                    .arg(proj_name)
+                    .status()
+                    .expect("Error creating new rust project");
             }
-            FileType::Placeholder => eprintln!("error: Error, unknown file extension"),
-            _ => {}
+            FileType::Placeholder => panic!("error: Error, unknown file extension"),
+            _ => {
+                fs::DirBuilder::new()
+                    .recursive(true)
+                    .create(proj_name)
+                    .expect("Error creating directory");
+
+                //Create src folder inside project directory
+                fs::DirBuilder::new()
+                    .recursive(true)
+                    .create(format!("{proj_name}/src"))
+                    .expect("Error creating directory");
+
+                //create target folder:
+                fs::DirBuilder::new()
+                    .recursive(true)
+                    .create(format!("{proj_name}/target"))
+                    .expect("Error creating directory");
+                writer(&format!("{proj_name}/.gitignore"), "/target");
+
+                //create code file:
+                Self::new(
+                    &format!("{proj_name}/src/{code_file}"),
+                    file_ext,
+                    String::from(""),
+                );
+            }
         }
-
-        Command::new("cd")
-            .arg(proj_name)
-            .status()
-            .expect("An error occurred; Please try again");
-
-        Self::new(
-            &format!("{proj_name}/src/{code_file}"),
-            file_ext,
-            String::from(""),
-        );
     }
 }
