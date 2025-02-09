@@ -81,11 +81,11 @@ impl Functions for Language {
             FileType::Py => {
                 let new_git_url = String::from("git+") + dep.as_str();
 
-                Command::new("pip")
-                    .arg("install")
-                    .arg(new_git_url)
-                    .status()
-                    .expect("Unable to add dependency");
+                match Command::new("pip").arg("install").arg(new_git_url).status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
+
                 let mut dep_loop = dep;
                 let dep_git = loop {
                     match dep_loop.split('/').next() {
@@ -217,45 +217,51 @@ impl Functions for Language {
                 }
             }
             FileType::Cpp => {
-                Command::new("g++")
+                match Command::new("g++")
                     .arg(file_name)
                     .arg("-o")
                     .arg("target/lion_compiled")
                     .status()
-                    .expect("An error occured; Please try again.");
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
                 println!("\nCompiled...\n");
-                Command::new("./target/lion_compiled")
-                    .status()
-                    .expect("An error occured; Please try again.");
+                match Command::new("./target/lion_compiled").status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
                 println!("\nRan the code successfully");
             }
             FileType::C => {
-                Command::new("gcc")
+                match Command::new("gcc")
                     .arg(file_name)
                     .arg("-o")
                     .arg("target/lion_compiled")
                     .status()
-                    .expect("An error occured; Please try again.");
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                };
                 println!("\nCompiled...\n");
-                Command::new("./target/lion_compiled")
-                    .status()
-                    .expect("An error occured; Please try again.");
+                match Command::new("./target/lion_compiled").status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
                 println!("\nRan the code successfully");
             }
-            FileType::Rs => {
-                Command::new("cargo")
-                    .arg("run")
-                    .status()
-                    .expect("An error occured; Please try again.");
-            }
+            FileType::Rs => match Command::new("cargo").arg("run").status() {
+                Err(error) => panic!("error: {error}"),
+                _ => {}
+            },
             FileType::Py => {
-                Command::new("python3")
-                    .arg(file_name)
-                    .status()
-                    .expect("An error occured, please try again");
+                match Command::new("python3").arg(file_name).status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
                 println!("\nRan the code successfully");
             }
-            _ => {
+            FileType::Placeholder => {
                 panic!("Running hasn't been supported yet for the specified file type");
             }
         }
@@ -264,32 +270,37 @@ impl Functions for Language {
     fn project(file_ext: FileType, proj_name: &String, code_file: String) {
         match file_ext {
             FileType::Rs => {
-                Command::new("cargo")
-                    .arg("new")
-                    .arg(proj_name)
-                    .status()
-                    .expect("Error creating new rust project");
+                match Command::new("cargo").arg("new").arg(proj_name).status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
                 return;
             }
             FileType::Placeholder => {
-                panic!("error: Error, unknown file extension");
+                panic!("error: Error, unknown or missing file extension");
             }
             FileType::Cpp => {
                 //create common directories:
                 common_dir(proj_name);
 
-                fs::DirBuilder::new()
+                match fs::DirBuilder::new()
                     .recursive(true)
                     .create(format!("{proj_name}/external"))
-                    .expect("Error while creating externals file");
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
             }
             FileType::Go => {
-                Command::new("go")
+                match Command::new("go")
                     .arg("mod")
                     .arg("init")
                     .arg(format!("./{proj_name}"))
                     .status()
-                    .expect("Error initialising go project");
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
             }
             _ => {
                 //create common directories:
@@ -308,21 +319,27 @@ impl Functions for Language {
 
 fn common_dir(proj_name: &String) {
     //create project folder
-    fs::DirBuilder::new()
-        .recursive(true)
-        .create(proj_name)
-        .expect("Error creating directory");
+    match fs::DirBuilder::new().recursive(true).create(proj_name) {
+        Err(error) => panic!("error: {error}"),
+        _ => {}
+    }
 
     //Create src folder inside project directory
-    fs::DirBuilder::new()
+    match fs::DirBuilder::new()
         .recursive(true)
         .create(format!("{proj_name}/src"))
-        .expect("Error creating directory");
+    {
+        Err(error) => panic!("error: {error}"),
+        _ => {}
+    }
 
     //create target folder:
-    fs::DirBuilder::new()
+    match fs::DirBuilder::new()
         .recursive(true)
         .create(format!("{proj_name}/target"))
-        .expect("Error creating directory");
+    {
+        Err(error) => panic!("error: {error}"),
+        _ => {}
+    }
     writer(&format!("{proj_name}/.gitignore"), "/target");
 }
