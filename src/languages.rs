@@ -79,11 +79,13 @@ impl Functions for Language {
             .to_string();
         match extension {
             FileType::Py => {
-                let new_git_url = String::from("git+") + dep.as_str();
+                if dep.contains(".git") {
+                    let new_git_url = String::from("git+") + dep.as_str();
 
-                match Command::new("pip").arg("install").arg(new_git_url).status() {
-                    Err(error) => panic!("error: {error}"),
-                    _ => {}
+                    match Command::new("pip").arg("install").arg(new_git_url).status() {
+                        Err(error) => panic!("error: {error}"),
+                        _ => {}
+                    }
                 }
 
                 let mut dep_loop = dep;
