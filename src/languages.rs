@@ -65,7 +65,9 @@ impl Functions for Language {
                 "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}"),
 
             FileType::Java => writer(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}"),
-            FileType::Ts =>{},
+            FileType::Ts =>{
+                writer(file_name, "console.log(\"Hello, Lion!\";");
+            },
             FileType::Placeholder => panic!("An error occured; Unsupported file type"),
 
         }
@@ -340,6 +342,24 @@ impl Functions for Language {
             }
             FileType::Placeholder => {
                 panic!("error: Error, unknown or missing file extension");
+            }
+            FileType::Py => {
+                match Command::new("python3")
+                    .arg("-m")
+                    .arg("venv")
+                    .arg(proj_name)
+                    .status()
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
+
+                Self::new(
+                    &format!("{proj_name}/{code_file}"),
+                    file_ext,
+                    String::from(""),
+                );
+                return;
             }
             _ => {
                 //create common directories:
