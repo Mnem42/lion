@@ -24,4 +24,4 @@ on how to use it and which languages are supported for which command:
   - C
   - Go
   - Java
-  - TypeScript (running only)
+  - TypeScript (incomplete)
