@@ -291,9 +291,7 @@ impl Functions for Language {
                 }
                 return;
             }
-            FileType::Placeholder => {
-                panic!("error: Error, unknown or missing file extension");
-            }
+
             FileType::Cpp => {
                 //create common directories:
                 common_dir(proj_name);
@@ -316,6 +314,32 @@ impl Functions for Language {
                     Err(error) => panic!("error: {error}"),
                     _ => {}
                 }
+            }
+            FileType::Ts => {
+                match Command::new("mkdir").arg(proj_name).status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
+                match Command::new("mkdir")
+                    .arg(format!("{proj_name}/src"))
+                    .status()
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
+
+                match Command::new("npx")
+                    .current_dir(proj_name)
+                    .arg("tsc")
+                    .arg("--init")
+                    .status()
+                {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
+            }
+            FileType::Placeholder => {
+                panic!("error: Error, unknown or missing file extension");
             }
             _ => {
                 //create common directories:
