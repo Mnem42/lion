@@ -24,6 +24,7 @@ pub enum FileType {
     Java,
     Go,
     Py,
+    Ts,
 }
 
 #[allow(dead_code)]
@@ -64,8 +65,9 @@ impl Functions for Language {
                 "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}"),
 
             FileType::Java => writer(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}"),
+            FileType::Ts =>{},
+            FileType::Placeholder => panic!("An error occured; Unsupported file type"),
 
-            FileType::Placeholder => panic!("An error occured; Unsupported file type")
         }
         if !dep.is_empty() {
             Self::dependency(file_ext, file_name, dep);
@@ -265,6 +267,17 @@ impl Functions for Language {
             }
             FileType::Placeholder => {
                 panic!("Running hasn't been supported yet for the specified file type");
+            }
+            FileType::Ts => {
+                match Command::new("tsc").status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
+                let (name, _) = file_name.split_once(".").unwrap();
+                match Command::new("node").arg(format!("src/{name}.js")).status() {
+                    Err(error) => panic!("error: {error}"),
+                    _ => {}
+                }
             }
         }
     }

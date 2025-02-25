@@ -5,3 +5,12 @@ version = 4
 [[package]]
 name = "Lion-cli"
 version = "0.2.6"
+dependencies = [
+ "setter",
+]
+
+[[package]]
+name = "setter"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eeca77279fdd74f0040f61c3f09fc41fb69d97dbad0aa0e236139ef2846879a6"

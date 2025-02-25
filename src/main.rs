@@ -38,6 +38,7 @@ fn main() {
         "go" => FileType::Go,
         "py" => FileType::Py,
         "java" => FileType::Java,
+        "ts" => FileType::Ts,
         _ => FileType::Placeholder,
     };
 

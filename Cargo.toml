@@ -12,3 +12,4 @@ keywords = ["cli", "file"]
 categories = ["command-line-utilities"]
 
 [dependencies]
+setter = "0.7.0"
