@@ -1,7 +1,10 @@
 use std::env;
 
-use languages::{FileType, Functions, Language};
+mod controller;
 mod languages;
+mod utils;
+
+use controller::{FileType, Language};
 
 struct Input {
     command: String,
@@ -42,24 +45,24 @@ fn main() {
         _ => FileType::Placeholder,
     };
 
-    let mut command_base = languages::Language {
+    let mut command_base = controller::Language {
         file_extension: file_ext,
         dependency_file: String::from(""),
-        command: languages::MyCommand::Empty,
+        command: controller::MyCommand::Empty,
     };
 
     match args.command.to_lowercase().as_str() {
         "new" => {
-            command_base.command = languages::MyCommand::New;
+            command_base.command = controller::MyCommand::New;
             Language::new(&args.file, command_base.file_extension, args.add_ons);
             println!("Created .{extension} file");
         }
         "help" => {
-            command_base.command = languages::MyCommand::Help;
+            command_base.command = controller::MyCommand::Help;
             println!("Help command called.\n{help}");
         }
         "dep" => {
-            command_base.command = languages::MyCommand::Dep;
+            command_base.command = controller::MyCommand::Dep;
             Language::dependency(
                 command_base.file_extension,
                 &args.file,
@@ -67,11 +70,11 @@ fn main() {
             );
         }
         "run" => {
-            command_base.command = languages::MyCommand::Run;
+            command_base.command = controller::MyCommand::Run;
             Language::run(command_base.file_extension, &args.file);
         }
         "proj" => {
-            command_base.command = languages::MyCommand::Proj;
+            command_base.command = controller::MyCommand::Proj;
             Language::project(command_base.file_extension, &args.add_ons, args.file);
         }
         _ => eprintln!("Unknown command;\nRun with 'help' to see command list"),
