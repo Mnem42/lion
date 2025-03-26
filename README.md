@@ -8,7 +8,10 @@ It helps by creating the file with some preset code and add external dependencie
 ```bash
 cargo install Lion-cli
 ```
-
+### Using curl command:
+```curl
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/TeenCoder159/lion/releases/download/v0.3.1/Lion-cli-installer.sh | sh
+```
 
 
 See the
