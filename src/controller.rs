@@ -4,6 +4,7 @@ use crate::languages::c;
 use crate::languages::cpp;
 use crate::languages::go;
 use crate::languages::java;
+use crate::languages::javascript;
 use crate::languages::python;
 use crate::languages::rust;
 use crate::languages::typescript;
@@ -26,6 +27,7 @@ pub enum FileType {
     Go,
     Py,
     Ts,
+    Js,
 }
 
 #[allow(dead_code)]
@@ -50,8 +52,12 @@ impl Language {
 
             FileType::Java => java::new(file_name),
             FileType::Ts => typescript::new(file_name),
+            FileType::Js => javascript::new(file_name),
             FileType::Placeholder => panic!("An error occured; Unsupported file type"),
             //FileType::Html => {todo!()}
+            // _ => {
+            //     panic!("Unsupported Filetype")
+            // }
         }
         if !dep.is_empty() {
             Self::dependency(file_ext, file_name, dep);
@@ -138,9 +144,15 @@ impl Language {
                 typescript::run(file_name);
             }
 
+            FileType::Js => {
+                javascript::run(file_name);
+            }
+
             FileType::Placeholder => {
                 panic!("Running hasn't been supported yet for the specified file type");
-            } // FileType::Html => {
+            } // _ => {
+              //     panic!("Unsupported Filetype")
+              // } // FileType::Html => {
               //     todo!()
               // }
         }
@@ -174,7 +186,12 @@ impl Language {
             }
             FileType::Java => {
                 java::proj(proj_name);
-            } // FileType::Html => {}
+            }
+            FileType::Js => {
+                javascript::proj(proj_name);
+            } // _ => {
+              //     panic!("Unsupported Filetype")
+              // } // FileType::Html => {}
         }
 
         //create code file:
