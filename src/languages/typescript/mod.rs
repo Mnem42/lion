@@ -2,7 +2,7 @@ use crate::utils::*;
 use std::process::Command;
 
 pub fn new(file_name: &String) {
-    writer(file_name, "console.log(\"Hello, Lion!\";");
+    writer(file_name, "console.log(\"Hello, Lion!\");");
 }
 
 pub fn run(file_name: &String) {
