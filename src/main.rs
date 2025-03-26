@@ -5,6 +5,7 @@ mod languages;
 mod utils;
 
 use controller::{FileType, Language};
+use setter::config::Config;
 
 struct Input {
     command: String,
@@ -76,6 +77,15 @@ fn main() {
         "proj" => {
             command_base.command = controller::MyCommand::Proj;
             Language::project(command_base.file_extension, &args.add_ons, args.file);
+        }
+        "init" => {
+            let file = Config {
+                setting: "file_ext".to_string(),
+                mode: extension.to_string(),
+                file: "Lion.toml".to_string(),
+                divider: "[Project]".to_string(),
+            };
+            file.init();
         }
         _ => eprintln!("Unknown command;\nRun with 'help' to see command list"),
     }

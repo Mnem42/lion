@@ -12,4 +12,9 @@ keywords = ["cli", "file"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-setter = "0.7.0"
+setter = "0.9.2"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"

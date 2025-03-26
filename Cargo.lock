@@ -11,6 +11,6 @@ dependencies = [
 
 [[package]]
 name = "setter"
-version = "0.7.0"
+version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eeca77279fdd74f0040f61c3f09fc41fb69d97dbad0aa0e236139ef2846879a6"
+checksum = "8cce2ea5180c9b9b09e147855893d1d08151d2a95318e43ead3b08f1a212e9e6"

@@ -11,7 +11,6 @@ pub fn proj(proj_name: &String) {
     if let Err(error) = Command::new("cargo").arg("new").arg(proj_name).status() {
         panic!("error: {error}")
     }
-    return;
 }
 
 pub fn dep(dep: &String) {
