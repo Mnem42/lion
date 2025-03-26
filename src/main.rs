@@ -43,6 +43,7 @@ fn main() {
         "py" => FileType::Py,
         "java" => FileType::Java,
         "ts" => FileType::Ts,
+        "js" => FileType::Js,
         _ => FileType::Placeholder,
     };
 
@@ -76,7 +77,18 @@ fn main() {
         }
         "proj" => {
             command_base.command = controller::MyCommand::Proj;
-            Language::project(command_base.file_extension, &args.add_ons, args.file);
+            Language::project(
+                command_base.file_extension,
+                &args.add_ons,
+                args.file.clone(),
+            );
+            let file = Config {
+                setting: "file_ext".to_string(),
+                mode: extension.to_string(),
+                file: format!("{}/Lion.toml", args.add_ons).to_string(),
+                divider: "[Project]".to_string(),
+            };
+            file.init();
         }
         "init" => {
             let file = Config {
