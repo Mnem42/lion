@@ -30,13 +30,14 @@ pub fn proj(proj_name: &String) -> Result<(), LionError> {
         eprintln!("Failed to create common directories: {}", err);
     }
 
+    if let Err(error) = fs::DirBuilder::new()
+        .recursive(true)
+        .create(format!("{proj_name}/external"))
+    {
+        println!("An error occurred while trying to create C project: {error}")
+    };
     Ok(
-        if let Err(error) = fs::DirBuilder::new()
-            .recursive(true)
-            .create(format!("{proj_name}/external"))
-        {
-            println!("An error occurred while trying to create C project: {error}")
-        },
+        (),
     )
 }
 

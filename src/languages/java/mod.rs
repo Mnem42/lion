@@ -33,12 +33,13 @@ pub fn run(file_name: &String) -> Result<(), LionError> {
 }
 
 pub fn proj(proj_name: &String) -> Result<(), LionError> {
-    Ok(if let Err(err) = common_dir(proj_name) {
+    if let Err(err) = common_dir(proj_name) {
         eprintln!(
             "An error occured while trying to create java project: {}",
             err
         );
-    })
+    };
+    Ok(())
 }
 
 pub fn new(file_name: &String) -> Result<(), LionError> {
