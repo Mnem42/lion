@@ -1,6 +1,7 @@
 use std::env;
 
 mod controller;
+mod errors;
 mod languages;
 mod utils;
 
@@ -32,10 +33,16 @@ fn main() {
 
     let first_arg = env::args().nth(1);
     let mut second_arg = env::args().nth(2);
-    let third_arg = env::args().nth(3);
+    let mut third_arg = env::args().nth(3);
 
-    if second_arg.clone().unwrap_or(String::new()).is_empty() {
+    if second_arg.clone().unwrap_or_default().is_empty() {
         second_arg = setting.read_config("file_path", "[Project]");
+    } else if !second_arg.clone().unwrap().contains(".") {
+        // if first_arg == Some(String::from("dep")) {
+
+        // }
+
+        third_arg = second_arg.clone()
     }
 
     let args = Input {
@@ -80,8 +87,6 @@ fn main() {
             println!("WARNING: File provided is of different type as set type.")
         }
         file_ext = set_file_ext;
-    } else if args.command.to_lowercase().as_str() != "proj" {
-        utils::file_setup(&args.file, extension.to_string());
     }
 
     let command_base = controller::Language {
@@ -90,7 +95,10 @@ fn main() {
 
     match args.command.to_lowercase().as_str() {
         "new" => {
-            Language::new(&args.file, command_base.file_extension, args.add_ons);
+            if let Err(err) = Language::new(&args.file, command_base.file_extension, args.add_ons) {
+                eprintln!("Error creating file: {}", err);
+                return;
+            }
             println!("Created .{extension} file");
         }
         "help" => {
@@ -104,14 +112,16 @@ fn main() {
             );
         }
         "run" => {
-            Language::run(command_base.file_extension, &args.file);
+            Language::run(command_base.file_extension, &args.file)
+                .expect("Error while trying to run file");
         }
         "proj" => {
             Language::project(
                 command_base.file_extension,
                 &args.add_ons,
                 args.file.clone(),
-            );
+            )
+            .expect("Error while trying to create project");
             // let mut file = Config {
             //     setting: "file_ext".to_string(),
             //     mode: extension.to_string(),
@@ -122,11 +132,6 @@ fn main() {
             // file.setting = String::from("file_path");
             // file.mode = args.add_ons;
             // file.write_config();
-            std::process::Command::new("Lion-cli")
-                .current_dir(args.add_ons)
-                .args(["init".to_string(), format!("src/{}", args.file)])
-                .status()
-                .expect("Error initialising project");
         }
         "init" => {
             utils::file_setup(&args.file, extension.to_string());

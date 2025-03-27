@@ -1,21 +1,33 @@
+use crate::errors::{LionError, command_error};
 use crate::utils::*;
 use std::process::Command;
 
-pub fn run(file_name: &String) {
-    match Command::new("go")
-        .arg("run")
-        .arg(format!("src/{file_name}"))
-        .arg("-o")
-        .arg("target/lion_compiled")
+pub fn run(file_name: &String) -> Result<(), LionError> {
+    let args = vec![
+        "run".to_string(),
+        format!("src/{file_name}"),
+        "-o".to_string(),
+        "target/lion_compiled".to_string(),
+    ];
+
+    Command::new("go")
+        .args(&args)
         .status()
-    {
-        Err(e) => {
-            panic!("An error occured while running your go code: {e}");
-        }
-        Ok(_) => {
-            println!("\n\nRan the code successfully!\n");
-        }
-    }
+        .map_err(|err| command_error("go", args, None, err))?;
+
+    println!("\n\nRan the code successfully!\n");
+    Ok(())
+}
+
+pub fn dep(dep: &String) -> Result<(), LionError> {
+    let args = vec!["get".to_string(), dep.clone()];
+
+    Command::new("go")
+        .args(&args)
+        .status()
+        .map_err(|err| command_error("go", args, None, err))?;
+
+    Ok(())
 }
 
 pub fn proj(proj_name: &String) {
@@ -29,13 +41,9 @@ pub fn proj(proj_name: &String) {
     }
 }
 
-pub fn new(file_name: &String) {
+pub fn new(file_name: &String) -> Result<(), LionError> {
     writer(
         file_name,
         "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello Lion!\")\n}",
     )
-}
-
-pub fn dep(dep: &String) {
-    Command::new("go").arg("get").arg(dep);
 }

@@ -1,48 +1,74 @@
+use crate::errors::{LionError, command_error};
 use crate::utils::*;
 use std::process::Command;
 
-pub fn new(file_name: &String) {
-    writer(file_name, "console.log(\"Hello, Lion!\");");
+pub fn new(file_name: &String) -> Result<(), LionError> {
+    writer(file_name, "console.log(\"Hello, Lion!\");")
 }
 
-pub fn run(file_name: &String) {
-    if let Err(error) = Command::new("tsc").status() {
-        panic!("error: {error}")
-    }
-    let (name, _) = file_name.split_once(".").unwrap();
-    if let Err(error) = Command::new("node").arg(format!("{name}.js")).status() {
-        panic!("error: {error}")
-    }
+pub fn run(file_name: &String) -> Result<(), LionError> {
+    Command::new("tsc")
+        .status()
+        .map_err(|err| command_error("tsc", vec![], None, err))?;
+
+    let (name, _) = file_name
+        .split_once(".")
+        .ok_or_else(|| LionError::Custom("Invalid file name format".to_string()))?;
+
+    let args = vec![format!("{name}.js")];
+
+    Command::new("node")
+        .args(&args)
+        .status()
+        .map_err(|err| command_error("node", args, None, err))?;
+
+    Ok(())
 }
 
-pub fn dep(dep: &String) {
+pub fn dep(dep: &String) -> Result<(), LionError> {
+    let npm_install_args = vec!["install".to_string(), dep.clone()];
+
     Command::new("npm")
-        .args(["install", dep])
+        .args(&npm_install_args)
         .status()
-        .expect("An error occurred while trying to run npm install");
+        .map_err(|err| command_error("npm", npm_install_args.clone(), None, err))?;
+
+    let npm_types_args = vec![
+        "install".to_string(),
+        "--save-dev".to_string(),
+        format!("@types/{dep}"),
+    ];
+
     Command::new("npm")
-        .args(["install", "--save-dev", format!("@types/{dep}").as_str()])
+        .args(&npm_types_args)
         .status()
-        .expect("Error while installing typescript types");
+        .map_err(|err| command_error("npm", npm_types_args, None, err))?;
+
+    Ok(())
 }
 
-pub fn proj(proj_name: &String) {
-    if let Err(error) = Command::new("mkdir").arg(proj_name).status() {
-        panic!("error: {error}")
-    }
-    if let Err(error) = Command::new("mkdir")
-        .arg(format!("{proj_name}/src"))
-        .status()
-    {
-        panic!("error: {error}")
-    }
+pub fn proj(proj_name: &String) -> Result<(), LionError> {
+    let mkdir_args = vec![proj_name.clone()];
 
-    if let Err(error) = Command::new("npx")
+    Command::new("mkdir")
+        .args(&mkdir_args)
+        .status()
+        .map_err(|err| command_error("mkdir", mkdir_args, None, err))?;
+
+    let mkdir_src_args = vec![format!("{proj_name}/src")];
+
+    Command::new("mkdir")
+        .args(&mkdir_src_args)
+        .status()
+        .map_err(|err| command_error("mkdir", mkdir_src_args, None, err))?;
+
+    let npx_args = vec!["tsc".to_string(), "--init".to_string()];
+
+    Command::new("npx")
         .current_dir(proj_name)
-        .arg("tsc")
-        .arg("--init")
+        .args(&npx_args)
         .status()
-    {
-        panic!("error: {error}")
-    }
+        .map_err(|err| command_error("npx", npx_args, None, err))?;
+
+    Ok(())
 }

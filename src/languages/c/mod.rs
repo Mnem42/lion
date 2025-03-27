@@ -1,25 +1,34 @@
+use crate::errors::{LionError, command_error};
 use crate::utils::*;
 use std::fs;
 use std::process::Command;
 
-pub fn run(file_name: &String) {
-    if let Err(error) = Command::new("gcc")
-        .arg(file_name)
-        .arg("-o")
-        .arg("target/lion_compiled")
+pub fn run(file_name: &String) -> Result<(), LionError> {
+    let compile_args = vec![
+        file_name.clone(),
+        "-o".to_string(),
+        "target/lion_compiled".to_string(),
+    ];
+
+    Command::new("gcc")
+        .args(&compile_args)
         .status()
-    {
-        panic!("error: {error}")
-    };
+        .map_err(|err| command_error("gcc", compile_args, None, err))?;
+
     println!("\nCompiled...\n");
-    if let Err(error) = Command::new("./target/lion_compiled").status() {
-        panic!("error: {error}")
-    }
+
+    Command::new("./target/lion_compiled")
+        .status()
+        .map_err(|err| command_error("./target/lion_compiled", vec![], None, err))?;
+
     println!("\nRan the code successfully");
+    Ok(())
 }
 
 pub fn proj(proj_name: &String) {
-    common_dir(proj_name);
+    if let Err(err) = common_dir(proj_name) {
+        eprintln!("Failed to create common directories: {}", err);
+    }
 
     if let Err(error) = fs::DirBuilder::new()
         .recursive(true)
@@ -29,7 +38,7 @@ pub fn proj(proj_name: &String) {
     }
 }
 
-pub fn new(file_name: &String) {
+pub fn new(file_name: &String) -> Result<(), LionError> {
     writer(
         file_name,
         "#include <stdio.h>

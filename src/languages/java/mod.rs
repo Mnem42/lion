@@ -1,42 +1,46 @@
+use crate::errors::{LionError, command_error};
 use crate::utils::*;
 use std::process::Command;
 
-pub fn run(file_name: &String) {
-    match Command::new("javac")
-        .arg("-d")
-        .arg("target")
-        .arg(file_name)
+pub fn run(file_name: &String) -> Result<(), LionError> {
+    let compile_args = vec!["-d".to_string(), "target".to_string(), file_name.clone()];
+
+    Command::new("javac")
+        .args(&compile_args)
         .status()
-    {
-        Ok(_) => println!("\nCompiled...\n"),
-        Err(error) => panic!("An Error occured while compiling the Java code: {error}"),
-    }
+        .map_err(|err| command_error("javac", compile_args, None, err))?;
+
+    println!("\nCompiled...\n");
+
     let file_prefix = file_name
         .split('.')
         .next()
-        .expect("An error occured, please check your file name");
-    match Command::new("java")
-        .arg("-cp")
-        .arg("target")
-        .arg(file_prefix)
+        .ok_or_else(|| LionError::Custom("Invalid file name format".to_string()))?;
+
+    let run_args = vec![
+        "-cp".to_string(),
+        "target".to_string(),
+        file_prefix.to_string(),
+    ];
+
+    Command::new("java")
+        .args(&run_args)
         .status()
-    {
-        Ok(_) => {
-            println!("\n\nRan your code successfully!")
-        }
-        Err(error) => {
-            panic!("An error occured while running your code: {error}");
-        }
-    }
+        .map_err(|err| command_error("java", run_args, None, err))?;
+
+    println!("\n\nRan your code successfully!");
+    Ok(())
 }
 
 pub fn proj(proj_name: &String) {
-    common_dir(proj_name);
+    if let Err(err) = common_dir(proj_name) {
+        eprintln!("Failed to create common directories: {}", err);
+    }
 }
 
-pub fn new(file_name: &String) {
+pub fn new(file_name: &String) -> Result<(), LionError> {
     writer(
         file_name,
         "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}",
-    );
+    )
 }
