@@ -9,15 +9,6 @@ use crate::languages::python;
 use crate::languages::rust;
 use crate::languages::typescript;
 
-pub enum MyCommand {
-    Empty,
-    Help,
-    New,
-    Dep,
-    Run,
-    Proj,
-}
-
 #[derive(PartialEq)]
 pub enum FileType {
     Placeholder,
@@ -34,8 +25,6 @@ pub enum FileType {
 #[allow(dead_code)]
 pub struct Language {
     pub file_extension: FileType,
-    pub dependency_file: String,
-    pub command: MyCommand,
 }
 
 impl Language {
@@ -176,7 +165,7 @@ impl Language {
             }
             FileType::C => {
                 //create common directories:
-                c::project(proj_name);
+                c::proj(proj_name);
             }
             FileType::Go => {
                 go::proj(proj_name);

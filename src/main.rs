@@ -6,6 +6,7 @@ mod utils;
 
 use controller::{FileType, Language};
 use setter::config::Config;
+use utils::config_file_exists;
 
 struct Input {
     command: String,
@@ -22,9 +23,20 @@ fn main() {
         lion-cli run <fileName.extension> -> runs the file specified (see the docs on supported languages)\n
         lion-cli proj <fileName.extesnion> <project_name> -> Creates a project with the specified name";
 
+    let setting = Config {
+        setting: "file_ext".to_string(),
+        mode: "".to_string(),
+        file: "Lion.toml".to_string(),
+        divider: "[Project]".to_string(),
+    };
+
     let first_arg = env::args().nth(1);
-    let second_arg = env::args().nth(2);
+    let mut second_arg = env::args().nth(2);
     let third_arg = env::args().nth(3);
+
+    if second_arg.clone().unwrap_or(String::new()).is_empty() {
+        second_arg = setting.read_config("file_path", "[Project]");
+    }
 
     let args = Input {
         command: first_arg.unwrap_or_default(),
@@ -35,7 +47,7 @@ fn main() {
     let extension = args.file.split('.').last().unwrap_or("");
 
     // Match the file extension to determine the `FileType`
-    let file_ext = match extension {
+    let mut file_ext = match extension {
         "cpp" => FileType::Cpp,
         "rs" => FileType::Rs,
         "c" => FileType::C,
@@ -47,24 +59,44 @@ fn main() {
         _ => FileType::Placeholder,
     };
 
-    let mut command_base = controller::Language {
+    if config_file_exists() {
+        let set_file_ext = match setting
+            .read_config("file_ext", "[Project]")
+            .unwrap_or("".to_string())
+            .as_str()
+        {
+            "cpp" => FileType::Cpp,
+            "rs" => FileType::Rs,
+            "c" => FileType::C,
+            "go" => FileType::Go,
+            "py" => FileType::Py,
+            "java" => FileType::Java,
+            "ts" => FileType::Ts,
+            "js" => FileType::Js,
+            _ => FileType::Placeholder,
+        };
+
+        if set_file_ext != file_ext {
+            println!("WARNING: File provided is of different type as set type.")
+        }
+        file_ext = set_file_ext;
+    } else if args.command.to_lowercase().as_str() != "proj" {
+        utils::file_setup(&args.file, extension.to_string());
+    }
+
+    let command_base = controller::Language {
         file_extension: file_ext,
-        dependency_file: String::from(""),
-        command: controller::MyCommand::Empty,
     };
 
     match args.command.to_lowercase().as_str() {
         "new" => {
-            command_base.command = controller::MyCommand::New;
             Language::new(&args.file, command_base.file_extension, args.add_ons);
             println!("Created .{extension} file");
         }
         "help" => {
-            command_base.command = controller::MyCommand::Help;
             println!("Help command called.\n{help}");
         }
         "dep" => {
-            command_base.command = controller::MyCommand::Dep;
             Language::dependency(
                 command_base.file_extension,
                 &args.file,
@@ -72,32 +104,32 @@ fn main() {
             );
         }
         "run" => {
-            command_base.command = controller::MyCommand::Run;
             Language::run(command_base.file_extension, &args.file);
         }
         "proj" => {
-            command_base.command = controller::MyCommand::Proj;
             Language::project(
                 command_base.file_extension,
                 &args.add_ons,
                 args.file.clone(),
             );
-            let file = Config {
-                setting: "file_ext".to_string(),
-                mode: extension.to_string(),
-                file: format!("{}/Lion.toml", args.add_ons).to_string(),
-                divider: "[Project]".to_string(),
-            };
-            file.init();
+            // let mut file = Config {
+            //     setting: "file_ext".to_string(),
+            //     mode: extension.to_string(),
+            //     file: format!("{}/Lion.toml", args.add_ons),
+            //     divider: "[Project]".to_string(),
+            // };
+            // file.init();
+            // file.setting = String::from("file_path");
+            // file.mode = args.add_ons;
+            // file.write_config();
+            std::process::Command::new("Lion-cli")
+                .current_dir(args.add_ons)
+                .args(["init".to_string(), args.file])
+                .status()
+                .expect("Error initialising project");
         }
         "init" => {
-            let file = Config {
-                setting: "file_ext".to_string(),
-                mode: extension.to_string(),
-                file: "Lion.toml".to_string(),
-                divider: "[Project]".to_string(),
-            };
-            file.init();
+            utils::file_setup(&args.file, extension.to_string());
         }
         _ => eprintln!("Unknown command;\nRun with 'help' to see command list"),
     }
