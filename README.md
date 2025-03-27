@@ -4,7 +4,7 @@ It helps by creating the file with some preset code and add external dependencie
 
 ## Installation
 
-### Using Cargo (for Rust developers)
+### Using Cargo (Latest versions with minor fixes are available)
 ```bash
 cargo install Lion-cli
 ```
