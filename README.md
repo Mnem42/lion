@@ -10,7 +10,7 @@ cargo install Lion-cli
 ```
 ### Using curl command:
 ```curl
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/TeenCoder159/lion/releases/download/v0.3.1/Lion-cli-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/TeenCoder159/lion/releases/download/v0.4.0/Lion-cli-installer.sh | sh
 ```
 
 
