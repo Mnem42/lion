@@ -18,7 +18,7 @@ pub fn run(file_name: &String) {
     println!("\nRan the code successfully");
 }
 
-pub fn project(proj_name: &String) {
+pub fn proj(proj_name: &String) {
     common_dir(proj_name);
 
     if let Err(error) = fs::DirBuilder::new()
