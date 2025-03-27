@@ -10,7 +10,7 @@ pub fn run(file_name: &String) {
         panic!("error: {error}")
     }
     let (name, _) = file_name.split_once(".").unwrap();
-    if let Err(error) = Command::new("node").arg(format!("src/{name}.js")).status() {
+    if let Err(error) = Command::new("node").arg(format!("{name}.js")).status() {
         panic!("error: {error}")
     }
 }
