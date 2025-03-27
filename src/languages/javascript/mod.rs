@@ -6,10 +6,7 @@ pub fn new(file_name: &String) {
 }
 
 pub fn run(file_name: &String) {
-    if let Err(error) = Command::new("node")
-        .arg(format!("src/{file_name}"))
-        .status()
-    {
+    if let Err(error) = Command::new("node").arg(format!("{file_name}")).status() {
         panic!("error: {error}")
     }
 }
