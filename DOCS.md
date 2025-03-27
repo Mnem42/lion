@@ -69,11 +69,6 @@ file_ext = "rs"
   lion-cli dep main.py https://github.com/user/serde.git # MUST BE A GIT URL
   # Adds serde as a dependency (only supported for rust and python)
 
-  lion-cli dep main.cpp serde
-  lion-cli dep main.c serde
-  # Adds #include "serde/serde.h" to the top of main.cpp
-  # Temporarily unavailable
-
   lion-cli new main.rs serde
   lion-cli new main.py https://github.com/user/serde.gits
   # Adds serde as a dependency and creates the respective file
