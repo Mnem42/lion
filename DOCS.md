@@ -11,6 +11,28 @@ Prerequisites: Cargo and Rust
 
 ## Usage:
 
+### With a lion.toml configuration File
+
+If the file path in the Lion.toml file created is the file you want to run, then specifying the file repeatedly is not required:
+
+```bash
+Lion-cli run
+```
+
+Generating a lion.toml is as simple as doing:
+```bash
+Lion-cli init file/path
+```
+
+
+example Lion.toml:
+```toml
+[Project]
+file_path = "src/main.rs"
+file_ext = "rs"
+```
+
+
 
 ### File creation:
 ```bash
