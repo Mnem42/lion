@@ -124,7 +124,7 @@ fn main() {
             // file.write_config();
             std::process::Command::new("Lion-cli")
                 .current_dir(args.add_ons)
-                .args(["init".to_string(), args.file])
+                .args(["init".to_string(), format!("src/{}", args.file)])
                 .status()
                 .expect("Error initialising project");
         }
