@@ -1,6 +1,6 @@
 [package]
 name = "Lion-cli"
-version = "0.3.2-beta"
+version = "0.3.2"
 edition = "2024"
 authors = ["Umang Surana <no1umang@gmail.com>"]
 license = "MIT"
