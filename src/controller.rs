@@ -135,21 +135,21 @@ impl Language {
     ) -> Result<(), LionError> {
         match file_ext {
             FileType::Rs => {
-                rust::proj(proj_name);
+                rust::proj(proj_name)?;
                 init(format!("src/{}", code_file), proj_name.to_owned());
             }
 
             FileType::Cpp => {
-                cpp::proj(proj_name);
+                cpp::proj(proj_name)?;
                 init(format!("src/{}", code_file), proj_name.to_owned());
             }
             FileType::C => {
                 //create common directories:
-                c::proj(proj_name);
+                c::proj(proj_name)?;
                 init(format!("src/{}", code_file), proj_name.to_owned());
             }
             FileType::Go => {
-                go::proj(proj_name);
+                go::proj(proj_name)?;
             }
             FileType::Ts => {
                 typescript::proj(proj_name)?;
@@ -163,7 +163,7 @@ impl Language {
                 init(code_file.clone(), proj_name.to_owned());
             }
             FileType::Java => {
-                java::proj(proj_name);
+                java::proj(proj_name)?;
                 init(format!("src/{}", code_file), proj_name.to_owned());
             }
             FileType::Js => {
@@ -182,9 +182,7 @@ impl Language {
         ) {
             eprintln!("Warning: Failed to create file: {}", err);
         };
-        Ok(
-            (),
-        )
+        Ok(())
     }
 }
 

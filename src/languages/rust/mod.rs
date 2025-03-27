@@ -26,10 +26,12 @@ pub fn run(file_name: &String) -> Result<(), LionError> {
         })
 }
 
-pub fn proj(proj_name: &String) {
-    if let Err(error) = Command::new("cargo").arg("new").arg(proj_name).status() {
-        panic!("error: {error}")
-    }
+pub fn proj(proj_name: &String) -> Result<(), LionError> {
+    Ok(
+        if let Err(error) = Command::new("cargo").arg("new").arg(proj_name).status() {
+            eprintln!("Error while trying to create Rust project: {}", error);
+        },
+    )
 }
 
 pub fn dep(dep: &String) {

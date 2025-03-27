@@ -30,15 +30,17 @@ pub fn dep(dep: &String) -> Result<(), LionError> {
     Ok(())
 }
 
-pub fn proj(proj_name: &String) {
-    if let Err(error) = Command::new("go")
-        .arg("mod")
-        .arg("init")
-        .arg(format!("./{proj_name}"))
-        .status()
-    {
-        panic!("error: {error}")
-    }
+pub fn proj(proj_name: &String) -> Result<(), LionError> {
+    Ok(
+        if let Err(error) = Command::new("go")
+            .arg("mod")
+            .arg("init")
+            .arg(format!("./{proj_name}"))
+            .status()
+        {
+            eprintln!("An error occurred while trying to create go project: {error}");
+        },
+    )
 }
 
 pub fn new(file_name: &String) -> Result<(), LionError> {

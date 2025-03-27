@@ -25,18 +25,20 @@ pub fn run(file_name: &String) -> Result<(), LionError> {
     Ok(())
 }
 
-pub fn proj(proj_name: &String) {
+pub fn proj(proj_name: &String) -> Result<(), LionError> {
     //create common directories:
     if let Err(err) = common_dir(proj_name) {
         eprintln!("Failed to create common directories: {}", err);
     }
 
-    if let Err(error) = fs::DirBuilder::new()
-        .recursive(true)
-        .create(format!("{proj_name}/external"))
-    {
-        panic!("error: {error}")
-    }
+    Ok(
+        if let Err(error) = fs::DirBuilder::new()
+            .recursive(true)
+            .create(format!("{proj_name}/external"))
+        {
+            eprintln!("An error occurred while creating C++ project: {error}")
+        },
+    )
 }
 
 pub fn new(file_name: &String) -> Result<(), LionError> {
