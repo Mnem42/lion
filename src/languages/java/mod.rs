@@ -5,7 +5,7 @@ pub fn run(file_name: &String) {
     match Command::new("javac")
         .arg("-d")
         .arg("target")
-        .arg(format!("src/{file_name}"))
+        .arg(file_name)
         .status()
     {
         Ok(_) => println!("\nCompiled...\n"),
@@ -35,5 +35,8 @@ pub fn proj(proj_name: &String) {
 }
 
 pub fn new(file_name: &String) {
-    writer(file_name, "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}");
+    writer(
+        file_name,
+        "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Lion!\");\n    }\n}",
+    );
 }
