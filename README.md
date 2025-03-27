@@ -23,10 +23,11 @@ on how to use it and which languages are supported for which command:
 - [x] Allow dependency feature to be called individually
 - [x] Add a compiling + running feature
 - [x] Project creation with a preset file structure
+- [x] Add a lion settings file to get info about project (Partially added)
 
 
 - [ ] Linking of external libraries
-- [ ] Add a lion settings file to get info about project
+- [ ] Support for other languages like zig, gleam, etc.
 - [ ] Additional features coming soon...
 
 ## Current list of supported languages:
