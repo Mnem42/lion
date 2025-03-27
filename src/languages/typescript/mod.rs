@@ -15,6 +15,17 @@ pub fn run(file_name: &String) {
     }
 }
 
+pub fn dep(dep: &String) {
+    Command::new("npm")
+        .args(["install", dep])
+        .status()
+        .expect("An error occurred while trying to run npm install");
+    Command::new("npm")
+        .args(["install", "--save-dev", format!("@types/{dep}").as_str()])
+        .status()
+        .expect("Error while installing typescript types");
+}
+
 pub fn proj(proj_name: &String) {
     if let Err(error) = Command::new("mkdir").arg(proj_name).status() {
         panic!("error: {error}")

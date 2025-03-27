@@ -18,6 +18,7 @@ pub enum MyCommand {
     Proj,
 }
 
+#[derive(PartialEq)]
 pub enum FileType {
     Placeholder,
     Cpp,
@@ -96,6 +97,12 @@ impl Language {
             // FileType::C => {
             //     todo!()
             // }
+            FileType::Js => {
+                javascript::dep(&dep);
+            }
+            FileType::Ts => {
+                typescript::dep(&dep);
+            }
             FileType::Go => {
                 go::dep(&dep);
             }
