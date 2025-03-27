@@ -42,12 +42,16 @@ pub fn dependency(dep: &String) -> Result<(), LionError> {
 pub fn proj(proj_name: &String) -> Result<(), LionError> {
     let args = vec!["-m".to_string(), "venv".to_string(), proj_name.clone()];
 
+    if let Err(err) = common_dir(proj_name) {
+        eprintln!("Failed to create common directories: {}", err);
+    }
+
     Command::new("python3")
         .args(&args)
         .status()
         .map_err(|err| command_error("python3", args, None, err))?;
 
-    if let Err(err) = new(&format!("{}/main.py", proj_name)) {
+    if let Err(err) = new(&format!("{}/src/main.py", proj_name)) {
         eprintln!("Failed to create Python file: {}", err);
     }
 

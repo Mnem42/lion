@@ -160,7 +160,7 @@ impl Language {
             }
             FileType::Py => {
                 python::proj(proj_name)?;
-                init(code_file.clone(), proj_name.to_owned());
+                init(format!("src/{}", code_file), proj_name.to_owned());
             }
             FileType::Java => {
                 java::proj(proj_name)?;
