@@ -40,7 +40,11 @@ pub fn dependency(dep: &String) -> Result<(), LionError> {
 }
 
 pub fn proj(proj_name: &String) -> Result<(), LionError> {
-    let args = vec!["-m".to_string(), "venv".to_string(), proj_name.clone()];
+    let args = vec![
+        "-m".to_string(),
+        "venv".to_string(),
+        format!("{}/venv", proj_name),
+    ];
 
     if let Err(err) = common_dir(proj_name) {
         eprintln!("Failed to create common directories: {}", err);
