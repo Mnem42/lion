@@ -36,9 +36,7 @@ pub fn proj(proj_name: &String) -> Result<(), LionError> {
     {
         println!("An error occurred while trying to create C project: {error}")
     };
-    Ok(
-        (),
-    )
+    Ok(())
 }
 
 pub fn new(file_name: &String) -> Result<(), LionError> {

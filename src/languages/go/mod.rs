@@ -39,9 +39,7 @@ pub fn proj(proj_name: &String) -> Result<(), LionError> {
     {
         eprintln!("An error occurred while trying to create go project: {error}");
     };
-    Ok(
-        (),
-    )
+    Ok(())
 }
 
 pub fn new(file_name: &String) -> Result<(), LionError> {
