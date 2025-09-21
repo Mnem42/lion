@@ -1,1 +1,1 @@
-mod config_def;
+pub mod config_def;
