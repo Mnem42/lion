@@ -1,4 +1,6 @@
-mod languages;
 mod config;
+mod languages;
 
-fn main() {}
+fn main() {
+    println!("Hello, Lion!");
+}

@@ -1,0 +1,3 @@
+[workspace]
+members = ["{{MEMBERS}}"]
+resolver = "3"

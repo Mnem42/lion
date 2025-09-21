@@ -10,6 +10,7 @@ pub struct RustConfig {
     pub new_workspace_command: Option<String>,
     pub new_binary_command: Option<String>,
     pub new_library_command: Option<String>,
+    pub add_dependency_command: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
