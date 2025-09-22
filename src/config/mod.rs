@@ -1,4 +1,5 @@
 pub mod rust;
+pub mod templating;
 
 use std::path::{Path, PathBuf};
 

@@ -4,13 +4,8 @@ use walkdir::WalkDir;
 use anyhow::Result;
 use pathdiff::diff_paths;
 use crate::config::Config;
+use crate::config::templating::GlobalTemplatingConfig;
 use crate::itry;
-
-// TODO: make this take stuff from configs instead of being hard coded
-const DEFAULT_EXCLUSIONS: [&'static str; 2] = [
-    ".git",
-    "node_modules",
-];
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TemplateConfig{
@@ -26,10 +21,10 @@ pub struct PreprocessedTemplateConfig{
 }
 
 impl TemplateConfig{
-    pub fn preprocess(self, root: &Path, config: &Config) -> Result<PreprocessedTemplateConfig,anyhow::Error> {
+    pub fn preprocess(self, root: &Path, config: &GlobalTemplatingConfig) -> Result<PreprocessedTemplateConfig> {
         // I *don't* like this implementation, but can't think of a saner one
 
-        let mut exclusions = Vec::from(DEFAULT_EXCLUSIONS.map(|x| x.into()));
+        let mut exclusions = config.default_exclusions.clone();
         exclusions.extend_from_slice(&self.exclusions);
 
         let normalised_excls = exclusions
