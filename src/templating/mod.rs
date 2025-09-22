@@ -1,2 +1,2 @@
 pub mod config_def;
-mod search;
+pub mod search;

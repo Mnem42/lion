@@ -1,0 +1,4 @@
+label = "Testing template 2"
+
+exclusions = ["b.txt"]
+inclusions = ["Cargo.lock"]
