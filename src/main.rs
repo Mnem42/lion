@@ -3,6 +3,7 @@ use pathdiff::diff_paths;
 use crate::config::Config;
 use crate::templating::config_def::TemplateConfig;
 
+pub mod util;
 mod config;
 mod languages;
 mod templating;

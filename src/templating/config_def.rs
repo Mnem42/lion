@@ -3,15 +3,20 @@ use serde::{Deserialize, Serialize};
 use walkdir::WalkDir;
 use anyhow::Result;
 use pathdiff::diff_paths;
+use crate::itry;
 
-const fn default_exclusions() -> Vec<PathBuf> {
-    vec![]
-}
+// TODO: make this take stuff from configs instead of being hard coded
+const DEFAULT_EXCLUSIONS: [&'static str; 2] = [
+    ".git",
+    "node_modules",
+];
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TemplateConfig{
-    #[serde(default="default_exclusions")]
-    pub exclusions: Vec<PathBuf>
+    #[serde(default="Vec::new")]
+    pub exclusions: Vec<PathBuf>,
+    #[serde(default="Vec::new")]
+    pub inclusions: Vec<PathBuf>,
 }
 
 #[derive(Debug)]
@@ -20,13 +25,19 @@ pub struct PreprocessedTemplateConfig{
 }
 
 impl TemplateConfig{
-    pub fn preprocess(&self, root: PathBuf) -> Result<PreprocessedTemplateConfig,anyhow::Error> {
-        let normalised_excls = self.exclusions
+    pub fn preprocess(self, root: PathBuf) -> Result<PreprocessedTemplateConfig,anyhow::Error> {
+        // I *don't* like this implementation, but can't think of a saner one
+
+        let mut exclusions = Vec::from(DEFAULT_EXCLUSIONS.map(|x| x.into()));
+        exclusions.extend_from_slice(&self.exclusions);
+
+        let normalised_excls = exclusions
             .iter()
             .filter_map(|x| x.canonicalize().ok())
+            .filter(|x| !self.inclusions.contains(x))
             .collect::<Vec<_>>();
 
-        let inclusions: Result<Vec<PathBuf>,_> = WalkDir::new(root.clone())
+        let inclusions: Result<_> = WalkDir::new(root.clone())
             .into_iter()
             .map(|x| {
                 let x = x?.path().to_path_buf();
@@ -38,11 +49,7 @@ impl TemplateConfig{
                     if excls.contains(x) { return None }
                     let diffed = diff_paths(
                         x.clone(),
-                        match PathBuf::from(root.clone())
-                            .canonicalize() {
-                            Ok(x) => x,
-                            Err(x) => return Some(Err(x))
-                        }
+                        itry!(PathBuf::from(root.clone()).canonicalize())
                     )?;
                     return Some(Ok(diffed))
                 }
