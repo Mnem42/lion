@@ -11,13 +11,13 @@ fn default_exclusions() -> Vec<PathBuf> {
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]
+#[serde(default)]
 pub struct GlobalTemplatingConfig {
-    #[serde(default = "default_exclusions")]
     pub default_exclusions: Vec<PathBuf>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(default)]
 pub struct GlobalConfig {
-    #[serde(default)]
     templating: GlobalTemplatingConfig,
 }
