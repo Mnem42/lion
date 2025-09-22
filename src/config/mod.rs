@@ -4,7 +4,7 @@ pub mod templating;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
-use crate::config::rust::RustConfig;
+pub(crate) use crate::config::rust::RustConfig;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Config {

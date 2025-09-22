@@ -9,6 +9,9 @@ use crate::itry;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TemplateConfig{
+    #[serde(default = "String::new")]
+    pub label: String,
+
     #[serde(default="Vec::new")]
     pub exclusions: Vec<PathBuf>,
     #[serde(default="Vec::new")]
@@ -16,12 +19,12 @@ pub struct TemplateConfig{
 }
 
 #[derive(Debug)]
-pub struct PreprocessedTemplateConfig{
+pub struct TemplateInfo {
     pub paths_included: Vec<PathBuf>
 }
 
 impl TemplateConfig{
-    pub fn preprocess(self, root: &Path, config: &GlobalTemplatingConfig) -> Result<PreprocessedTemplateConfig> {
+    pub fn preprocess(self, root: &Path, config: &GlobalTemplatingConfig) -> Result<TemplateInfo> {
         // I *don't* like this implementation, but can't think of a saner one
 
         let mut exclusions = config.default_exclusions.clone();
@@ -39,21 +42,29 @@ impl TemplateConfig{
                 let x = x?.path().to_path_buf();
                 return Ok(x.canonicalize()?);
             })
-            .zip(std::iter::repeat(normalised_excls))
-            .filter_map(|(x, excls)| {
-                if let Ok(x) = &x {
-                    if excls.contains(x) { return None }
-                    let diffed = diff_paths(
-                        x.clone(),
-                        itry!(PathBuf::from(root.to_path_buf()).canonicalize())
-                    )?;
-                    return Some(Ok(diffed))
+            .filter(|x| {
+                match x {
+                    Ok(x) => {
+                        !(normalised_excls.iter()
+                            .any(|excl| {
+                                x.starts_with(excl.to_path_buf()) || normalised_excls.contains(x)
+                            }))
+                    }
+                    Err(_) => true // Keep errors
                 }
-                Some(x.into())
+            })
+            .map(|x| {
+                if let Ok(x) = &x {
+                    return Ok(diff_paths(
+                        x.clone(),
+                        PathBuf::from(root.to_path_buf()).canonicalize()?
+                    ).unwrap()) // None should be physically impossible in this case
+                }
+                x
             })
             .collect();
 
-        Ok(PreprocessedTemplateConfig {
+        Ok(TemplateInfo {
             paths_included: inclusions?
         })
     }
