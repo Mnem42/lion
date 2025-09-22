@@ -1,29 +1,27 @@
-use std::path::{Path, PathBuf};
-use serde::{Deserialize, Serialize};
-use walkdir::WalkDir;
+use crate::config::templating::GlobalTemplatingConfig;
 use anyhow::Result;
 use pathdiff::diff_paths;
-use crate::config::Config;
-use crate::config::templating::GlobalTemplatingConfig;
-use crate::itry;
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
+use walkdir::WalkDir;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct TemplateConfig{
+pub struct TemplateConfig {
     #[serde(default = "String::new")]
     pub label: String,
 
-    #[serde(default="Vec::new")]
+    #[serde(default = "Vec::new")]
     pub exclusions: Vec<PathBuf>,
-    #[serde(default="Vec::new")]
+    #[serde(default = "Vec::new")]
     pub inclusions: Vec<PathBuf>,
 }
 
 #[derive(Debug)]
 pub struct TemplateInfo {
-    pub paths_included: Vec<PathBuf>
+    pub paths_included: Vec<PathBuf>,
 }
 
-impl TemplateConfig{
+impl TemplateConfig {
     pub fn preprocess(self, root: &Path, config: &GlobalTemplatingConfig) -> Result<TemplateInfo> {
         // I *don't* like this implementation, but can't think of a saner one
 
@@ -44,28 +42,27 @@ impl TemplateConfig{
             })
             .filter(|x| {
                 match x {
-                    Ok(x) => {
-                        !normalised_excls.iter()
-                            .any(|excl| {
-                                x.starts_with(excl.to_path_buf()) || normalised_excls.contains(x)
-                            })
-                    }
-                    Err(_) => true // Keep errors
+                    Ok(x) => !normalised_excls.iter().any(|excl| {
+                        x.starts_with(excl.to_path_buf()) || normalised_excls.contains(x)
+                    }),
+                    Err(_) => true, // Keep errors
                 }
             })
             .map(|x| {
                 if let Ok(x) = &x {
                     return Ok(diff_paths(
                         x.clone(),
-                        PathBuf::from(root.to_path_buf()).canonicalize()?
-                    ).unwrap()) // None should be physically impossible in this case
+                        PathBuf::from(root.to_path_buf()).canonicalize()?,
+                    )
+                    .unwrap()); // None should be physically impossible in this case
+                } else {
+                    x
                 }
-                x
             })
             .collect();
 
         Ok(TemplateInfo {
-            paths_included: inclusions?
+            paths_included: inclusions?,
         })
     }
 }

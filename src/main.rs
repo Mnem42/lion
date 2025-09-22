@@ -1,23 +1,29 @@
-use std::path::Path;
 use crate::templating::config_def::TemplateConfig;
+use std::path::Path;
 
-pub mod util;
 mod config;
 mod languages;
 mod templating;
+pub mod util;
 
 fn main() {
-    let test: TemplateConfig = toml::from_str("\
+    let test: TemplateConfig = toml::from_str(
+        "\
         exclusions=[\"src/main.rs\",\"config.rs\"]\
-    ").unwrap();
+    ",
+    )
+    .unwrap();
 
     let global_cfg = toml::from_str("").unwrap();
 
-    println!("{}", test.preprocess(Path::new("./"), &global_cfg)
-        .unwrap().paths_included
-        .into_iter()
-        .map(|x| x.to_str().unwrap().to_string())
-        .collect::<Vec<_>>()
-        .join("\n")
+    println!(
+        "{}",
+        test.preprocess(Path::new("./"), &global_cfg)
+            .unwrap()
+            .paths_included
+            .into_iter()
+            .map(|x| x.to_str().unwrap().to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
     );
 }
