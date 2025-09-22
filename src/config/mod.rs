@@ -1,6 +1,6 @@
 pub mod cargo;
-pub mod templating;
 pub mod global;
+pub mod templating;
 
 pub(crate) use crate::config::cargo::CargoConfig;
 use serde::{Deserialize, Serialize};

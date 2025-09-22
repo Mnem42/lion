@@ -11,3 +11,5 @@ pub struct TemplateConfig {
     #[serde(default = "Vec::new")]
     pub inclusions: Vec<PathBuf>,
 }
+
+pub const TEMPLATE_CFG_FILENAME: &'static str = "template.toml";

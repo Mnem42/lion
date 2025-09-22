@@ -1,9 +1,9 @@
+use crate::config::global::GlobalTemplatingConfig;
 use crate::config::templating::TemplateConfig;
 use anyhow::Result;
 use pathdiff::diff_paths;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
-use crate::config::global::GlobalTemplatingConfig;
 
 #[derive(Debug)]
 pub struct TemplateInfo {
