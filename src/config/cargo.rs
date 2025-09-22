@@ -19,7 +19,7 @@ fn default_build_cmd() -> String {
 
 /// A configuration for rust in a specific workspace
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct RustConfig {
+pub struct CargoConfig {
     #[serde(default = "default_run_cmd")]
     pub run_command: String,
     #[serde(default = "default_build_cmd")]
