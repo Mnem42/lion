@@ -1,20 +1,9 @@
-use crate::config::templating::GlobalTemplatingConfig;
+use crate::config::templating::TemplateConfig;
 use anyhow::Result;
 use pathdiff::diff_paths;
-use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct TemplateConfig {
-    #[serde(default = "String::new")]
-    pub label: String,
-
-    #[serde(default = "Vec::new")]
-    pub exclusions: Vec<PathBuf>,
-    #[serde(default = "Vec::new")]
-    pub inclusions: Vec<PathBuf>,
-}
+use crate::config::global::GlobalTemplatingConfig;
 
 #[derive(Debug)]
 pub struct TemplateInfo {

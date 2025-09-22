@@ -1,5 +1,5 @@
-use crate::templating::config_def::TemplateConfig;
 use std::path::Path;
+use crate::config::templating::TemplateConfig;
 
 mod config;
 mod languages;

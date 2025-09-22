@@ -1,17 +1,13 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-fn default_exclusions() -> Vec<PathBuf> {
-    vec![
-        ".git".into(),
-        ".github".into(),
-        ".idea".into(),
-        "Cargo.lock".into(),
-    ]
-}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TemplateConfig {
+    #[serde(default = "String::new")]
+    pub label: String,
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct GlobalTemplatingConfig {
-    #[serde(default = "default_exclusions")]
-    pub default_exclusions: Vec<PathBuf>,
+    #[serde(default = "Vec::new")]
+    pub exclusions: Vec<PathBuf>,
+    #[serde(default = "Vec::new")]
+    pub inclusions: Vec<PathBuf>,
 }
