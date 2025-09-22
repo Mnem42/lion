@@ -22,8 +22,8 @@ macro_rules! itry {
 /// call `T::Default` to get a default value.
 ///
 /// This is mainly to make loading configs a bit nicer and less repetitive
-pub fn load_toml<T: DeserializeOwned + Default>(path: &Path) -> Result<T> {
-    if path.exists() {
+pub fn load_toml<T: DeserializeOwned + Default>(path: impl AsRef<Path>) -> Result<T> {
+    if path.as_ref().exists() {
         let config = std::fs::read_to_string(path)?;
         Ok(toml::from_str(&config)?)
     } else {

@@ -26,7 +26,7 @@ fn main() {
             .into_iter()
             .map(|x| {
                 println!("{:?}", x);
-                load_toml::<TemplateConfig>(x.as_path())
+                load_toml::<TemplateConfig>(x.clone())
                     .unwrap()
                     .preprocess(x.parent().unwrap(), &global_cfg)
             })
