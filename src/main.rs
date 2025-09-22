@@ -1,7 +1,4 @@
-use std::path::{Path, PathBuf};
-use pathdiff::diff_paths;
-use crate::config::Config;
-use crate::config::templating::GlobalTemplatingConfig;
+use std::path::Path;
 use crate::templating::config_def::TemplateConfig;
 
 pub mod util;

@@ -45,10 +45,10 @@ impl TemplateConfig{
             .filter(|x| {
                 match x {
                     Ok(x) => {
-                        !(normalised_excls.iter()
+                        !normalised_excls.iter()
                             .any(|excl| {
                                 x.starts_with(excl.to_path_buf()) || normalised_excls.contains(x)
-                            }))
+                            })
                     }
                     Err(_) => true // Keep errors
                 }
