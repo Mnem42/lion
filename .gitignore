@@ -2,3 +2,4 @@
 /.ds_store
 /Lion.toml
 /.ropeproject
+Cargo.lock
