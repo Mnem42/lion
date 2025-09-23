@@ -14,9 +14,13 @@ impl TemplateConfig {
     pub fn preprocess(self, root: &Path, config: &GlobalTemplatingConfig) -> Result<TemplateInfo> {
         // I *don't* like this implementation, but can't think of a saner one
 
+        // Merge the default exclusions from the config with the exclusions
+        // defined in the template config
         let mut exclusions = config.default_exclusions.clone();
         exclusions.extend_from_slice(&self.exclusions);
 
+        // Normalise the paths for every exclusion (to make comparison
+        // reliable)
         let normalised_excls = exclusions
             .iter()
             .filter_map(|x| x.canonicalize().ok())
@@ -25,11 +29,11 @@ impl TemplateConfig {
 
         let inclusions: Result<_> = WalkDir::new(root.to_path_buf())
             .into_iter()
-            .map(|x| {
+            .map(|x| { // Normalise all the inclusion patjs
                 let x = x?.path().to_path_buf();
                 return Ok(x.canonicalize()?);
             })
-            .filter(|x| {
+            .filter(|x| { // Filter out any items that show up as exclusions
                 match x {
                     Ok(x) => !normalised_excls.iter().any(|excl| {
                         x.starts_with(excl.to_path_buf()) || normalised_excls.contains(x)
@@ -37,13 +41,12 @@ impl TemplateConfig {
                     Err(_) => true, // Keep errors
                 }
             })
-            .map(|x| {
+            .map(|x| { // Convert all the paths to be relative to the provided root dir
                 if let Ok(x) = &x {
                     return Ok(diff_paths(
                         x.clone(),
                         PathBuf::from(root.to_path_buf()).canonicalize()?,
-                    )
-                    .unwrap()); // None should be physically impossible in this case
+                    ).unwrap()); // None should be physically impossible in this case
                 } else {
                     x
                 }
