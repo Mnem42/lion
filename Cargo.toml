@@ -13,6 +13,8 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 anyhow = "1.0.100"
+clap = { version = "4.5.47" }
+clap_derive = "4.5.47"
 pathdiff = "0.2.3"
 serde = { version = "1.0.226", features = ["derive"] }
 toml = "0.9.7"

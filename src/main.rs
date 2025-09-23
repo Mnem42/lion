@@ -4,6 +4,8 @@ use crate::util::load_toml;
 use std::path::PathBuf;
 use std::str::FromStr;
 use anyhow::Result;
+use clap::Parser;
+use crate::commands::exec;
 
 mod config;
 mod languages;
@@ -12,32 +14,8 @@ pub mod util;
 
 #[cfg(test)]
 mod tests;
+mod commands;
 
 fn main() {
-    let test: TemplateConfig = toml::from_str(
-        "\
-        exclusions=[\"src/main.rs\",\"config.rs\"]\
-    ",
-    )
-    .unwrap();
-
-    let global_cfg = toml::from_str("").unwrap();
-
-    println!(
-        "{:#?}",
-        &search_templates(vec![
-            PathBuf::from_str(".\\").unwrap()
-        ])
-            .unwrap()
-            .into_iter()
-            .map(|x| {
-                let x = x.canonicalize()?;
-                println!("{:?} {}", x, x.exists());
-                Ok(load_toml::<TemplateConfig>(x.clone())
-                    .unwrap()
-                    .resolve(x.parent().unwrap(), &global_cfg)
-                )
-            })
-            .collect::<Vec<Result<_>>>()
-    );
+    exec(Parser::parse());
 }
