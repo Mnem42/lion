@@ -10,6 +10,9 @@ mod languages;
 mod templating;
 pub mod util;
 
+#[cfg(test)]
+mod tests;
+
 fn main() {
     let test: TemplateConfig = toml::from_str(
         "\
