@@ -2,7 +2,7 @@ use std::{fs, process::Command};
 
 use anyhow::{Result, anyhow};
 
-use crate::config::RustConfig;
+use crate::config::CargoConfig;
 
 pub trait Language {
     fn run(&self) -> Result<()>;
@@ -54,7 +54,7 @@ pub enum RustProjectType {
 
 #[derive(Debug, Clone)]
 pub struct Rust {
-    pub config: Option<RustConfig>,
+    pub config: Option<CargoConfig>,
     pub proj_name: String,
     pub dir_path: String,
     pub project_type: RustProjectType,
