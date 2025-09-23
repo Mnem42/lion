@@ -40,15 +40,4 @@ fn main() {
             })
             .collect::<Vec<Result<_>>>()
     );
-
-    /*println!(
-        "{}",
-        test.preprocess(Path::new("./"), &global_cfg)
-            .unwrap()
-            .paths_included
-            .into_iter()
-            .map(|x| x.to_str().unwrap().to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    );*/
 }
